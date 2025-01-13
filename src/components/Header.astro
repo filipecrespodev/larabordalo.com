@@ -1,0 +1,22 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import SocialLisr from './SocialLisr.astro';
+
+---
+
+<header>
+	<nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+		<div class="flex lg:flex-1">
+			<a href="/">
+				<img src="https://cdn.myportfolio.com/e0f00062-e0ec-4ab1-966c-52fc45748c1d/c13412a1-def6-44d5-9d91-75ee54253eec_rwc_9x0x1703x1909x4096.gif?h=52ed7fcc136a242849a02706d09f31e3" alt="" width="100" />
+			</a>
+		</div>
+		<div class="flex gap-x-12">
+			<HeaderLink href="/projects">Projects</HeaderLink>
+			<HeaderLink href="/ilustrations">Ilustrattion</HeaderLink>			
+			<HeaderLink href="/about">About</HeaderLink>
+			<HeaderLink href="/contact">Contact</HeaderLink>
+		</div>
+		<SocialLisr />
+	</nav>
+</header>

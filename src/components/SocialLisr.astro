@@ -1,0 +1,39 @@
+---
+import { 
+	SITE_TITLE ,
+	BEHANCE_URL,
+	LINKEDIN_URL,
+	INSTAGRAM_URL,
+	PINTEREST_URL,
+	FACEBOOK_URL,
+	SPOTFY_URL,
+} from '../consts';
+import { Icon } from 'astro-icon/components'
+
+---
+<div class="hidden lg:flex gap-2">
+    <a href={BEHANCE_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on Behance</span>
+        <Icon name="mdi:behance" />
+    </a>
+    <a href={LINKEDIN_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on LinkedIn</span>
+        <Icon name="mdi:linkedin" />
+    </a>
+    <a href={INSTAGRAM_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on Instagram</span>
+        <Icon name="mdi:instagram" />
+    </a>
+    <a href={PINTEREST_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on Pinterest</span>
+        <Icon name="mdi:pinterest" />
+    </a>
+    <a href={FACEBOOK_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on Facebook</span>
+        <Icon name="mdi:facebook" />
+    </a>
+    <a href={SPOTFY_URL} target="_blank">
+        <span class="sr-only">Follow Lara Bordalo on Spotify</span>
+        <Icon name="mdi:spotify" />
+    </a>
+</div>
