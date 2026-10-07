@@ -1,15 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import astroI18next from "astro-i18next";
-
 import sitemap from '@astrojs/sitemap';
-import tailwind from '@astrojs/tailwind';
-import icon from 'astro-icon';
 
-// https://astro.build/config
 export default defineConfig({
-    site: 'https://example.com',
-    integrations: [mdx(), sitemap(), tailwind(), icon(), astroI18next()
-    ],
+  site: 'https://larabordalo.com',
+  trailingSlash: 'never',
+  build: {
+    // /chameleon -> chameleon.html, matching the old Adobe Portfolio URLs.
+    format: 'file',
+  },
+  redirects: {
+    '/work': '/',
+  },
+  image: {
+    responsiveStyles: false,
+  },
+  integrations: [sitemap()],
 });

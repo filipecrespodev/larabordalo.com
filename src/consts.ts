@@ -1,38 +1,29 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
+export const SITE = {
+  name: 'Lara Bordalo',
+  title: 'Lara Bordalo Illustration',
+  description:
+    'My name is Lara Bordalo, I am a Brazilian graphic artist and I am currently based in Portugal. I work mixing art, illustration and design.',
+  keywords: 'art,illustration,design,books,kids illustration,advertising illustration',
+  email: 'art@larabordalo.com',
+  lang: 'en',
+};
 
-export const SITE_TITLE = 'Lara Bordalo';
-export const SITE_DESCRIPTION = 'Welcome to my website!';
-
-export const BEHANCE_URL = 'https://www.behance.net/larabordalo';
-export const LINKEDIN_URL = 'https://www.linkedin.com/in/larabordalo/';
-export const INSTAGRAM_URL = 'https://www.instagram.com/larabordalo/';
-export const PINTEREST_URL = 'https://www.pinterest.com/larabordalo/';
-export const FACEBOOK_URL = 'https://www.facebook.com/larabordalo/';
-export const SPOTFY_URL = 'https://open.spotify.com/user/kv3jeqkf2xs1nwk7nmjys2vvg';
-
-export const EMAIL = 'art@larabordalo.com';
-export const PHONE = '+351 912 345 678';
-
-export const MENU = [
-    {
-        title: 'Home',
-        link: '/',
-    },
-    {
-        title: 'About',
-        link: '/about',
-    },
-    {
-        title: 'Projects',
-        link: '/projects',
-    },
-    {
-        title: 'Illustrations',
-        link: '/illustrations',
-    },
-    {
-        title: 'Contact',
-        link: '/contact',
-    },
+export const NAV = [
+  { href: '/', label: 'Ilustrattion' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
+
+export const SOCIAL = [
+  { icon: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/larabordalo' },
+  { icon: 'pinterest', label: 'Pinterest', href: 'https://www.pinterest.pt/alarabordalo/' },
+  { icon: 'email', label: 'Email', href: `mailto:${SITE.email}` },
+] as const;
+
+/**
+ * Contact form endpoint. The form posts to Web3Forms (free, no backend):
+ * create an access key at https://web3forms.com with art@larabordalo.com and
+ * set PUBLIC_WEB3FORMS_KEY in the hosting environment. Without a key the form
+ * falls back to opening the visitor's mail app.
+ */
+export const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY as string | undefined;
