@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import FitTitle from '../components/FitTitle.astro';
+import Blocks from '../components/Blocks.astro';
+import { href, t, type Lang } from '../i18n/ui';
+import { getProjects, localize, type Project } from '../lib/projects';
+
+const { lang, project } = Astro.props as { lang: Lang; project: Project };
+const ui = t(lang);
+const text = localize(project, lang);
+const { kind, year, author, publisher } = project.data;
+const section = kind === 'book' ? 'books' : 'illustration';
+
+// "Next" stays within the same kind, wrapping around.
+const siblings = (await getProjects()).filter((p) => p.data.kind === kind);
+const next = siblings[(siblings.findIndex((p) => p.id === project.id) + 1) % siblings.length];
+const details = [
+  [t(lang).books.author, author],
+  [t(lang).books.publisher, publisher],
+  [t(lang).books.format, text.format],
+  [t(lang).books.medium, text.medium],
+].filter((d): d is [string, string] => !!d[1]);
+---
+
+<Base lang={lang} title={text.title} description={text.description} image={project.data.cover} section={section}>
+  <div class="ph">
+    <div class="ph-meta">
+      <a href={href(`/${section}`, lang)} style="text-decoration:none">← {ui.nav[section]}</a>
+      <span>{[text.category, year].filter(Boolean).join(' · ')}</span>
+    </div>
+    <FitTitle text={text.title} cap={18} />
+  </div>
+  {
+    (text.description || details.length > 0) && (
+      <div class="pj-intro">
+        {text.description && <p class="lead">{text.description}</p>}
+        {details.length > 0 && (
+          <dl>
+            {details.map(([k, v]) => (
+              <div>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
+    )
+  }
+  <Blocks blocks={project.data.blocks} title={text.title} meta={[year, text.medium].filter(Boolean).join(' · ')} />
+  {
+    next && next.id !== project.id && (
+      <a class="next" href={href(`/${next.id}`, lang)}>
+        <span class="count">{ui.project.next} →</span>
+        <span class="bk-title">{localize(next, lang).title}</span>
+      </a>
+    )
+  }
+</Base>

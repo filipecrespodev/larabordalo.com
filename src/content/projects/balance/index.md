@@ -1,11 +1,18 @@
 ---
 title: "Balance"
+kind: "illustration"
 year: 2022
 category: "Illustration"
 medium: "collage, china ink, color pencil"
 order: 13
 cover: "./cover.jpg"
-description: "Sometimes we need to find."
+size: "s"
+description: "Sometimes we need to find it."
+pt:
+  title: "Equilíbrio"
+  category: "Ilustração"
+  medium: "colagem, tinta-da-china, lápis de cor"
+  description: "Às vezes precisamos de o encontrar."
 blocks:
   - type: image
     src: ./01.jpg

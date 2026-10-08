@@ -1,10 +1,16 @@
 ---
 title: "Capivara"
+kind: "illustration"
 year: 2023
 category: "Illustration"
 medium: "color pencils, markers"
 order: 12
 cover: "./cover.jpg"
+size: "s"
+pt:
+  category: "Ilustração"
+  medium: "lápis de cor, marcadores"
+  description: "Pela sua personalidade, este animal é muito querido no Brasil, e a sua expressividade cativa-nos."
 description: "Because of its personality, this animal is very beloved in Brazil, and its expressiveness captivates us."
 blocks:
   - type: image

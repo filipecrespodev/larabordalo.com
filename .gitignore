@@ -17,3 +17,6 @@ pnpm-debug.log*
 # OS / editors
 .DS_Store
 .idea/
+
+# wrangler local state
+.wrangler/

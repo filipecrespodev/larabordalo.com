@@ -1,0 +1,179 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import FitTitle from '../components/FitTitle.astro';
+import { href, t, type Lang } from '../i18n/ui';
+import { getProjects, localize, metaLine, projectImages } from '../lib/projects';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+const books = (await getProjects()).filter((p) => p.data.kind === 'book');
+const years = books.map((b) => b.data.year).filter((y): y is number => !!y);
+const range = years.length ? ` · ${Math.min(...years)}–${Math.max(...years)}` : '';
+
+const rows = await Promise.all(
+  books.map(async (book) => {
+    const text = localize(book, lang);
+    const front = book.data.bookCover ?? book.data.cover;
+    const spreads = projectImages(book)
+      .filter((img) => img !== front)
+      .slice(0, 2);
+    const preview = await getImage({ src: front, width: 480, format: 'webp', quality: 80 });
+    const full = await Promise.all(
+      spreads.map((s) => getImage({ src: s, width: Math.min(s.width, 2200), format: 'webp', quality: 85 })),
+    );
+    return { book, text, front, spreads, full: full.map((f) => f.src), preview: preview.src };
+  }),
+);
+---
+
+<Base lang={lang} title={ui.nav.books} section="books" image={books[0]?.data.cover}>
+  <div class="ph">
+    <div class="ph-meta"><span>{ui.books.meta}</span><span>{ui.books.titles(books.length)}{range}</span></div>
+    <FitTitle text={ui.nav.books} cap={24} />
+  </div>
+
+  <div class="bk-list" id="bkList">
+    {
+      rows.map(({ book, text, front, spreads, full, preview }, i) => (
+        <article class="bk">
+          <button
+            class="bk-head"
+            type="button"
+            aria-expanded="false"
+            aria-controls={`bkp${i}`}
+            data-cursor={ui.cursor.open}
+            data-preview={preview}
+          >
+            <span class="bk-title">{text.title}</span>
+            <span class="bk-year">{book.data.year}</span>
+            <span class="bk-fmt">{text.category}</span>
+            <span class="bk-plus" aria-hidden="true" />
+          </button>
+          <div class="bk-panel" id={`bkp${i}`} inert>
+            <div class="bk-inner">
+              <div class="bk-body" data-lb-group>
+                <a class="bk-cover book3d" href={href(`/${book.id}`, lang)} data-cursor={ui.cursor.view}>
+                  <span class="book">
+                    <Image
+                      src={front}
+                      alt={text.title}
+                      widths={[320, 540].filter((w) => w <= front.width)}
+                      sizes="270px"
+                      format="webp"
+                      loading="lazy"
+                    />
+                  </span>
+                </a>
+                <div class="bk-spreads">
+                  {spreads.map((s, j) => (
+                    <a href={full[j]} data-lb data-title={text.title} data-meta={metaLine(book.data.year, text.medium)}>
+                      <Image
+                        src={s}
+                        alt={text.title}
+                        widths={[400, 640, 960].filter((w) => w <= s.width)}
+                        sizes="(max-width: 700px) 50vw, 25vw"
+                        format="webp"
+                        loading="lazy"
+                      />
+                    </a>
+                  ))}
+                </div>
+                <div class="bk-text">
+                  {text.description && <p>{text.description}</p>}
+                  <dl>
+                    {book.data.author && (
+                      <div>
+                        <dt>{ui.books.author}</dt>
+                        <dd>{book.data.author}</dd>
+                      </div>
+                    )}
+                    {book.data.publisher && (
+                      <div>
+                        <dt>{ui.books.publisher}</dt>
+                        <dd>{book.data.publisher}</dd>
+                      </div>
+                    )}
+                    {text.format && (
+                      <div>
+                        <dt>{ui.books.format}</dt>
+                        <dd>{text.format}</dd>
+                      </div>
+                    )}
+                    {text.medium && (
+                      <div>
+                        <dt>{ui.books.medium}</dt>
+                        <dd>{text.medium}</dd>
+                      </div>
+                    )}
+                  </dl>
+                  <a class="btn" href={href(`/${book.id}`, lang)}>
+                    {ui.books.view} →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+  <div class="bk-prev" id="bkPrev" aria-hidden="true"><img alt="" /></div>
+</Base>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const list = document.getElementById('bkList')!;
+  const pv = document.getElementById('bkPrev')!;
+  const pimg = pv.querySelector('img')!;
+
+  const toggle = (bk: Element, open: boolean) => {
+    bk.classList.toggle('is-open', open);
+    bk.querySelector('.bk-head')!.setAttribute('aria-expanded', String(open));
+    (bk.querySelector('.bk-panel') as HTMLElement).inert = !open;
+  };
+  list.addEventListener('click', (e) => {
+    const head = (e.target as Element).closest('.bk-head');
+    if (!head) return;
+    const bk = head.parentElement!;
+    const open = !bk.classList.contains('is-open');
+    list.querySelectorAll('.bk.is-open').forEach((x) => x !== bk && toggle(x, false));
+    toggle(bk, open);
+    pv.classList.remove('on');
+    if (open && !reduce) setTimeout(() => bk.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 350);
+  });
+
+  // Cover preview that follows the cursor over closed titles.
+  if (fine) {
+    let tx = 0,
+      ty = 0,
+      x = 0,
+      y = 0,
+      ra = 0;
+    const tick = () => {
+      const vx = tx - x;
+      x += (tx - x) * 0.18;
+      y += (ty - y) * 0.18;
+      pv.style.transform = `translate3d(${x + 30}px,${y - 90}px,0) rotate(${Math.max(-9, Math.min(9, vx * 0.12))}deg)`;
+      ra = Math.abs(tx - x) + Math.abs(ty - y) > 0.3 ? requestAnimationFrame(tick) : 0;
+    };
+    list.addEventListener('pointermove', (e) => {
+      tx = e.clientX;
+      ty = e.clientY;
+      if (!ra) ra = requestAnimationFrame(tick);
+    });
+    list.addEventListener('pointerover', (e) => {
+      const head = (e.target as Element).closest<HTMLElement>('.bk-head');
+      if (head && !head.parentElement!.classList.contains('is-open')) {
+        pimg.src = head.dataset.preview!;
+        if (!pv.classList.contains('on')) {
+          x = tx;
+          y = ty;
+        }
+        pv.classList.add('on');
+      } else pv.classList.remove('on');
+    });
+    list.addEventListener('pointerleave', () => pv.classList.remove('on'));
+  }
+</script>

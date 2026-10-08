@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import FitTitle from '../components/FitTitle.astro';
+import { href, t, type Lang } from '../i18n/ui';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang).notFound;
+---
+
+<Base lang={lang} title="404">
+  <div class="ph">
+    <div class="ph-meta"><span>404</span><span>{ui.text}</span></div>
+    <FitTitle text={ui.title} cap={30} />
+  </div>
+  <div class="lost">
+    <a class="btn" href={href('/', lang)}>{ui.back}</a>
+  </div>
+</Base>

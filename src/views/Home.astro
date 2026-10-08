@@ -1,0 +1,199 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import FitTitle from '../components/FitTitle.astro';
+import { MOODBOARD, PALETTE } from '../data/moodboard';
+import { SITE } from '../consts';
+import { href, t, type Lang } from '../i18n/ui';
+import { getProjects, localize, metaLine } from '../lib/projects';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+const projects = await getProjects();
+
+const files = import.meta.glob<ImageMetadata>('/src/content/projects/*/*.{jpg,jpeg,png,webp}', {
+  eager: true,
+  import: 'default',
+});
+
+const items = await Promise.all(
+  MOODBOARD.map(async (item) => {
+    if (item.kind !== 'image') return { ...item };
+    const project = projects.find((p) => p.id === item.project);
+    if (!project) throw new Error(`moodboard: unknown project "${item.project}"`);
+    const src = item.image ? files[`/src/content/projects/${item.project}/${item.image}`] : project.data.cover;
+    if (!src) throw new Error(`moodboard: missing image ${item.project}/${item.image}`);
+    const text = localize(project, lang);
+    const full = await getImage({ src, width: Math.min(src.width, 2200), format: 'webp', quality: 85 });
+    return { ...item, src, full: full.src, text, year: project.data.year, url: href(`/${project.id}`, lang) };
+  }),
+);
+let fig = 0;
+const vars = (i: (typeof MOODBOARD)[number]) =>
+  `--x:${i.x}%;--y:${i.y}%;--w:${i.w};--r:${i.r}deg;--mx:${i.mx}%;--my:${i.my}%;--mw:${i.mw};--d:${i.d};--z:${i.z}`;
+---
+
+<Base lang={lang} section="home" home image={projects[0]?.data.cover}>
+  <div class="board" id="board">
+    <FitTitle text={SITE.name} cap={34} class="wordmark" />
+    <div class="scatter" id="scatter" data-lb-group>
+      {
+        items.map((item) => {
+          if (item.kind === 'dymo')
+            return (
+              <div class="it dymo" style={vars(item)} data-cursor={ui.cursor.drag}>
+                {ui.home.dymo}
+              </div>
+            );
+          if (item.kind === 'swatch')
+            return (
+              <div class="it swatch" style={vars(item)} data-cursor={ui.cursor.drag}>
+                <b>{ui.home.palette}</b>
+                <ul>
+                  {PALETTE.map((c, i) => (
+                    <li>
+                      <i style={`background:${c}`} />
+                      {ui.home.colors[i]}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          const n = String(++fig).padStart(2, '0');
+          const caption = `${item.text.title}${item.year ? `, ${item.year}` : ''}`;
+          return (
+            <a
+              class:list={['it', item.style]}
+              style={vars(item)}
+              href={item.full}
+              draggable="false"
+              data-lb
+              data-cursor={ui.cursor.drag}
+              data-title={item.text.title}
+              data-meta={metaLine(item.year, item.text.medium)}
+              data-href={item.url}
+            >
+              <Image
+                src={item.src}
+                alt={caption}
+                widths={[320, 480, 720, 960].filter((w) => w <= item.src.width)}
+                sizes={`(max-width: 700px) ${item.mw}vw, ${Math.round(item.w * 1.3)}vw`}
+                format="webp"
+                quality={82}
+                loading="eager"
+                draggable="false"
+              />
+              <span class="figcap">
+                Fig. {n} · {caption}
+              </span>
+            </a>
+          );
+        })
+      }
+    </div>
+    <p class="meta tl">{ui.home.tl}</p>
+    <p class="meta tr">{ui.home.tr}</p>
+    <p class="meta bl">{ui.home.bl}</p>
+    <p class="meta br">{ui.home.br}</p>
+  </div>
+  <p class="mhint">{ui.home.hint}</p>
+</Base>
+
+<script>
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const scatter = document.getElementById('scatter')!;
+  const board = document.getElementById('board')!;
+  const els = [...scatter.querySelectorAll<HTMLElement>('.it')];
+
+  // Drop the items onto the board one by one.
+  (async () => {
+    for (const el of els) {
+      el.classList.add('in');
+      if (!reduce) await new Promise((r) => setTimeout(r, 75));
+    }
+  })();
+
+  // Drag (mouse/pen only; touch keeps native scrolling).
+  let it: HTMLElement | null = null;
+  let sx = 0,
+    sy = 0,
+    ox = 0,
+    oy = 0,
+    moved = false,
+    justDragged = false,
+    z = 20;
+  scatter.addEventListener('pointerdown', (e) => {
+    justDragged = false;
+    if (e.pointerType === 'touch' || e.button > 0) return;
+    const t = (e.target as Element).closest<HTMLElement>('.it');
+    if (!t) return;
+    e.preventDefault();
+    it = t;
+    moved = false;
+    sx = e.clientX;
+    sy = e.clientY;
+    ox = parseFloat(t.dataset.dx || '0');
+    oy = parseFloat(t.dataset.dy || '0');
+    t.style.zIndex = String(++z);
+    t.classList.add('is-drag');
+    try {
+      t.setPointerCapture(e.pointerId);
+    } catch (_) {}
+  });
+  scatter.addEventListener('pointermove', (e) => {
+    if (!it) return;
+    const dx = e.clientX - sx;
+    const dy = e.clientY - sy;
+    if (!moved && Math.hypot(dx, dy) > 5) moved = true;
+    if (moved) {
+      it.dataset.dx = String(ox + dx);
+      it.dataset.dy = String(oy + dy);
+      it.style.setProperty('--dx', `${ox + dx}px`);
+      it.style.setProperty('--dy', `${oy + dy}px`);
+    }
+  });
+  const end = () => {
+    if (!it) return;
+    it.classList.remove('is-drag');
+    justDragged = moved;
+    it = null;
+  };
+  scatter.addEventListener('pointerup', end);
+  scatter.addEventListener('pointercancel', end);
+  // A drag must not open the lightbox.
+  scatter.addEventListener('click', (e) => {
+    if (justDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      justDragged = false;
+    }
+  });
+
+  // Gentle parallax following the mouse.
+  if (fine && !reduce) {
+    let px = 0,
+      py = 0,
+      tx = 0,
+      ty = 0,
+      ra = 0;
+    const loop = () => {
+      px += (tx - px) * 0.08;
+      py += (ty - py) * 0.08;
+      board.style.setProperty('--px', `${px.toFixed(2)}px`);
+      board.style.setProperty('--py', `${py.toFixed(2)}px`);
+      ra = Math.abs(tx - px) + Math.abs(ty - py) > 0.05 ? requestAnimationFrame(loop) : 0;
+    };
+    board.addEventListener('pointermove', (e) => {
+      const r = board.getBoundingClientRect();
+      tx = -((e.clientX - r.left) / r.width - 0.5) * 36;
+      ty = -((e.clientY - r.top) / r.height - 0.5) * 26;
+      if (!ra) ra = requestAnimationFrame(loop);
+    });
+    board.addEventListener('pointerleave', () => {
+      tx = 0;
+      ty = 0;
+      if (!ra) ra = requestAnimationFrame(loop);
+    });
+  }
+</script>

@@ -1,0 +1,18 @@
+---
+// Museum-style title: one line stretched to the full content width (see the
+// `fit` script in Base.astro), letters rising in one by one.
+interface Props {
+  text: string;
+  /** Maximum font size, in vw. */
+  cap?: number;
+  class?: string;
+  tag?: 'h1' | 'h2' | 'div';
+}
+const { text, cap = 24, class: cls, tag: Tag = 'h1' } = Astro.props;
+---
+
+<Tag class:list={['fit', cls]} data-cap={cap}>
+  <span class="sr">{text}</span><span class="fit-in" aria-hidden="true"
+    >{[...text].map((c, i) => <span class="ch" style={`--i:${i}`}>{c === ' ' ? ' ' : c}</span>)}</span
+  >
+</Tag>

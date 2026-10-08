@@ -1,10 +1,16 @@
 ---
 title: "How many inner spaces do we hold?"
+kind: "illustration"
 year: 2022
-category: "Illustration"
-medium: "collage, watercolor"
 order: 10
 cover: "./cover.jpg"
+category: "Illustration"
+medium: "collage, watercolor"
+size: "m"
+pt:
+  title: "Quantos espaços interiores guardamos?"
+  category: "Ilustração"
+  medium: "colagem, aguarela"
 blocks:
   - type: grid
     images:

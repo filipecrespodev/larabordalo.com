@@ -1,11 +1,18 @@
 ---
 title: "The bug's killer"
+kind: "illustration"
 year: 2022
 category: "Narrative"
 medium: "acrylic, color pencils"
 order: 8
 cover: "./cover.jpg"
-description: "l created this original narrative to express and provide relief for personal difficulties in dealing with conflicts and dilemmas I faced after moving to another country. It is an illustration designed to showcase a part of human nature with humor and irony."
+size: "m"
+description: "I created this original narrative to express, and find relief from, the conflicts and dilemmas I faced after moving to another country. It shows a part of human nature with humor and irony."
+pt:
+  title: "O matador de insetos"
+  category: "Narrativa"
+  medium: "acrílica e lápis de cor"
+  description: "Criei esta narrativa original para expressar, e aliviar, os conflitos e dilemas que vivi depois de mudar de país. Mostra uma parte da natureza humana com humor e ironia."
 blocks:
   - type: image
     src: ./01.jpg

@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import FitTitle from '../components/FitTitle.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { SITE, SOCIAL } from '../consts';
+import { t, type Lang } from '../i18n/ui';
+import { localize } from '../lib/projects';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang);
+const page = (await getEntry('pages', 'about'))!;
+const bio = page.data[lang];
+// Second, smaller taped image: a detail of one of the illustrations.
+const detail = (await getEntry('projects', 'funny-dog'))!;
+---
+
+<Base lang={lang} title={ui.nav.about} section="about" image={page.data.portrait}>
+  <div class="ph">
+    <div class="ph-meta"><span>{ui.about.meta}</span><span>{ui.about.disciplines}</span></div>
+    <FitTitle text={ui.nav.about} cap={24} />
+  </div>
+  <div class="about">
+    <div class="about-fig">
+      <figure class="af1">
+        <Image src={page.data.portrait} alt={ui.about.portrait} widths={[400, 640, 900]} sizes="(max-width: 900px) 90vw, 36vw" format="webp" />
+        <figcaption>{ui.about.portrait}</figcaption>
+      </figure>
+      <figure class="af2">
+        <Image src={detail.data.cover} alt={localize(detail, lang).title} widths={[300, 500]} sizes="(max-width: 900px) 45vw, 18vw" format="webp" />
+        <figcaption>{localize(detail, lang).title}, {detail.data.year}</figcaption>
+      </figure>
+    </div>
+    <div class="about-txt">
+      <p class="lead" set:html={bio.lead} />
+      <div class="cols">{bio.paragraphs.map((p) => <p>{p}</p>)}</div>
+      <dl class="facts">
+        {
+          bio.facts.map((f) => (
+            <div>
+              <dt>{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+  <div class="contact" id="contact">
+    <span class="lbl">{ui.about.contactLabel}</span>
+    <a class="mail" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    <div class="crow">
+      <button class="btn" type="button" data-copy={SITE.email} data-done={ui.about.copied}>{ui.about.copy}</button>
+      {
+        SOCIAL.map((s) => (
+          <a class="count" href={s.href} target="_blank" rel="noopener">
+            {s.label === 'Instagram' ? SITE.instagram : s.label} ↗
+          </a>
+        ))
+      }
+    </div>
+    <ContactForm lang={lang} />
+  </div>
+</Base>

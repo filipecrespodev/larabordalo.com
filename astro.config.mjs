@@ -9,11 +9,18 @@ export default defineConfig({
     // /chameleon -> chameleon.html, matching the old Adobe Portfolio URLs.
     format: 'file',
   },
+  // Keep these in sync with public/_redirects.
   redirects: {
     '/work': '/',
+    '/contact': '/about#contact',
   },
   image: {
     responsiveStyles: false,
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !/\/(work|contact)$/.test(page),
+      i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt' } },
+    }),
+  ],
 });

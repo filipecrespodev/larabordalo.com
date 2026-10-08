@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
-import Project from '../views/Project.astro';
-import { getProjects } from '../lib/projects';
+import Project from '../../views/Project.astro';
+import { getProjects } from '../../lib/projects';
 
 export const getStaticPaths = (async () => {
   const projects = await getProjects();
@@ -11,4 +11,4 @@ export const getStaticPaths = (async () => {
 const { project } = Astro.props;
 ---
 
-<Project lang="en" project={project} />
+<Project lang="pt" project={project} />

@@ -1,18 +1,17 @@
 ---
 import { Image, getImage } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import Lightbox from './Lightbox.astro';
 
 interface Props {
   blocks: CollectionEntry<'projects'>['data']['blocks'];
-  /** Smaller body copy, used for long text such as the About page. */
-  smallText?: boolean;
   title: string;
+  /** Lightbox caption line (year · medium). */
+  meta?: string;
 }
 
-const { blocks, smallText = false, title } = Astro.props;
+const { blocks, title, meta } = Astro.props;
 
-// Base row height of the justified grid, same as Adobe Portfolio.
+// Base row height of the justified grid.
 const ROW = 260;
 const WIDTHS = [480, 800, 1200, 1600, 2000, 2560];
 const full = async (src: ImageMetadata) =>
@@ -20,64 +19,62 @@ const full = async (src: ImageMetadata) =>
 const widthStyle = (w?: number) => (w ? `width:${w}%` : undefined);
 ---
 
-{
-  blocks.map(async (block, i) => {
-    if (block.type === 'image') {
-      return (
-        <div class="module image" style={widthStyle(block.width)}>
-          <a href={await full(block.src)} class="lightbox-trigger" data-lightbox>
-            <Image
-              src={block.src}
-              alt={title}
-              widths={WIDTHS.filter((w) => w <= block.src.width)}
-              sizes="(max-width: 932px) 100vw, min(1150px, 72vw)"
-              format="webp"
-              quality={85}
-              loading={i === 0 ? 'eager' : 'lazy'}
-            />
-          </a>
-        </div>
-      );
-    }
-    if (block.type === 'grid') {
-      return (
-        <div class="module grid" style={widthStyle(block.width)}>
-          <div class="grid-main">
-            {block.images.map(async (img) => {
-              const grow = (ROW * img.width) / img.height;
-              return (
-                <a
-                  href={await full(img)}
-                  class="grid-item lightbox-trigger"
-                  data-lightbox
-                  style={`width:${grow}px;flex-grow:${grow}`}
-                >
-                  <i style={`padding-bottom:${(img.height / img.width) * 100}%`} />
-                  <Image
-                    src={img}
-                    alt={title}
-                    widths={WIDTHS.filter((w) => w <= img.width)}
-                    sizes={`(max-width: 540px) 100vw, min(${Math.round(grow * 2.5)}px, 100vw)`}
-                    format="webp"
-                    quality={85}
-                    loading="lazy"
-                  />
-                </a>
-              );
-            })}
+<div class="blocks" data-lb-group>
+  {
+    blocks.map(async (block, i) => {
+      if (block.type === 'image') {
+        return (
+          <div class="module image" style={widthStyle(block.width)}>
+            <a href={await full(block.src)} data-lb data-title={title} data-meta={meta}>
+              <Image
+                src={block.src}
+                alt={title}
+                widths={WIDTHS.filter((w) => w <= block.src.width)}
+                sizes="(max-width: 932px) 100vw, min(1150px, 92vw)"
+                format="webp"
+                quality={85}
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+            </a>
           </div>
-        </div>
-      );
-    }
-    if (block.type === 'text') {
-      return (
-        <div class="module text">
-          <div class:list={['rich-text', { small: smallText }]} set:html={block.html} />
-        </div>
-      );
-    }
-    return <div class="module embed" set:html={block.html} />;
-  })
-}
-
-<Lightbox />
+        );
+      }
+      if (block.type === 'grid') {
+        return (
+          <div class="module grid" style={widthStyle(block.width)}>
+            <div class="grid-main">
+              {block.images.map(async (img) => {
+                const grow = (ROW * img.width) / img.height;
+                return (
+                  <a
+                    href={await full(img)}
+                    class="grid-item"
+                    data-lb
+                    data-title={title}
+                    data-meta={meta}
+                    style={`width:${grow}px;flex-grow:${grow}`}
+                  >
+                    <i style={`padding-bottom:${(img.height / img.width) * 100}%`} />
+                    <Image
+                      src={img}
+                      alt={title}
+                      widths={WIDTHS.filter((w) => w <= img.width)}
+                      sizes={`(max-width: 700px) 100vw, min(${Math.round(grow * 2.5)}px, 100vw)`}
+                      format="webp"
+                      quality={85}
+                      loading="lazy"
+                    />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+      if (block.type === 'text') {
+        return <div class="module text" set:html={block.html} />;
+      }
+      return <div class="module embed" set:html={block.html} />;
+    })
+  }
+</div>

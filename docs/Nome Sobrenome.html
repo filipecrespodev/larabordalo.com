@@ -1,0 +1,779 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nome Sobrenome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Libre+Franklin:wght@300;400;500;600&display=swap">
+<style>
+/* Layout: home é um moodboard físico (itens soltos, inclinados, arrastáveis, sem grid);
+   as outras páginas usam títulos de museu em largura total, hairlines e colunas assimétricas. */
+:root{
+  --paper:#ECEBE5;
+  --card:#F7F6F1;
+  --ink:#141412;
+  --ink-2:#5C5C56;
+  --paper-dim:#B4B3AA;
+  --line:rgba(20,20,18,.2);
+  --accent:#2336F0;
+  --tape:rgba(221,213,181,.75);
+  --f-display:'Archivo','Arial Narrow','Helvetica Neue',Arial,sans-serif;
+  --f-body:'Libre Franklin','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --gutter:clamp(16px,2.4vw,36px);
+  --sh-1:0 1px 1px rgba(20,20,18,.1),0 10px 20px -8px rgba(20,20,18,.32);
+  --sh-2:0 2px 3px rgba(20,20,18,.12),0 30px 50px -18px rgba(20,20,18,.4);
+  --hdr:66px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font:400 15px/1.5 var(--f-body);padding-inline:var(--gutter);-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:var(--paper)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+a{color:inherit}
+button{font:inherit;color:inherit}
+img{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+main{overflow-x:clip}
+
+/* ---------- cabeçalho ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 24px;padding-block:14px 12px;border-bottom:1px solid var(--ink)}
+.id{display:grid;gap:2px;text-decoration:none;font:500 11px/1.25 var(--f-mono);letter-spacing:.07em;text-transform:uppercase}
+.id span:last-child{color:var(--ink-2)}
+.nav{display:flex;gap:clamp(14px,2.4vw,38px)}
+.nav a{position:relative;text-decoration:none;font:800 clamp(19px,2.3vw,34px)/1 var(--f-display);font-stretch:70%;text-transform:uppercase;letter-spacing:-.005em}
+.roll{display:grid;overflow:hidden;height:1em}
+.roll>span{display:block;transition:transform .55s cubic-bezier(.7,0,.2,1)}
+.roll>span+span{color:var(--accent)}
+.nav a:hover .roll>span,.nav a:focus-visible .roll>span{transform:translateY(-100%)}
+.nav a[aria-current="page"] .roll>span:first-child{color:var(--accent)}
+.nav a[aria-current="page"]::after{content:"";position:absolute;right:-.3em;top:.02em;width:.2em;height:.2em;background:var(--accent)}
+
+/* ---------- páginas ---------- */
+.page{display:none;padding-top:clamp(18px,3vw,40px)}
+.page.is-active{display:block;animation:pageIn .8s cubic-bezier(.2,.7,.2,1) backwards}
+.page-home{padding-top:0}
+@keyframes pageIn{from{opacity:0;transform:translateY(16px)}}
+
+.wipe{position:fixed;inset:0;z-index:40;background:var(--accent);pointer-events:none;clip-path:inset(100% 0 0 0)}
+.wipe.in{animation:wipeIn .43s cubic-bezier(.7,0,.2,1) forwards}
+.wipe.out{animation:wipeOut .45s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes wipeIn{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes wipeOut{from{clip-path:inset(0 0 0 0)}to{clip-path:inset(0 0 100% 0)}}
+
+/* título de museu em largura total */
+.fit{margin:0;font:800 12vw/.84 var(--f-display);font-stretch:68%;text-transform:uppercase;letter-spacing:-.02em;white-space:nowrap}
+.fit-in{display:inline-block;overflow:hidden;vertical-align:top;padding-block:.12em .06em;margin-block:-.12em -.06em}
+.ch{display:inline-block;animation:rise 1.05s cubic-bezier(.2,.8,.15,1) backwards;animation-delay:calc(var(--i)*45ms + 150ms)}
+@keyframes rise{from{transform:translateY(108%)}}
+.ph{display:grid;gap:12px;margin-bottom:clamp(22px,3.4vw,52px)}
+.ph-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 20px;font:500 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 24px;margin-top:clamp(56px,8vw,120px);padding-block:16px 28px;border-top:1px solid var(--ink);font:500 11px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.toplink{background:none;border:0;padding:0;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;font:inherit}
+.toplink:hover{color:var(--accent)}
+
+/* ---------- home: moodboard ---------- */
+.board{position:relative;--u:min(1vw,1.6svh);height:max(560px,calc(100svh - var(--hdr) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)));overflow:hidden;overflow:clip}
+.wordmark{position:absolute;left:0;right:0;top:35%;z-index:1;pointer-events:none}
+.scatter{position:absolute;inset:0}
+.meta{position:absolute;z-index:1;margin:0;font:500 10.5px/1.3 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;pointer-events:none}
+.meta::before{content:"+ "}
+.meta.tl{top:12px;left:0}.meta.tr{top:12px;right:0}.meta.bl{bottom:12px;left:0}.meta.br{bottom:12px;right:0}
+.mhint,.page-home .foot{display:none}
+
+.it{position:absolute;left:var(--x);top:var(--y);width:calc(var(--w)*var(--u));margin:0;z-index:var(--z,2);
+  rotate:var(--r,0deg);
+  translate:calc(var(--dx,0px) + var(--px,0px)*var(--d,.5)) calc(var(--dy,0px) + var(--py,0px)*var(--d,.5));
+  cursor:grab;user-select:none;-webkit-user-select:none;visibility:hidden;
+  transition:scale .5s cubic-bezier(.2,.8,.2,1),rotate .5s cubic-bezier(.2,.8,.2,1)}
+.it.in{visibility:visible;animation:drop 1s cubic-bezier(.2,.8,.15,1) backwards}
+@keyframes drop{from{transform:translateY(-7vh) scale(.86) rotate(-6deg);opacity:0}}
+.it:hover{scale:1.035;rotate:calc(var(--r,0deg)*.35)}
+.it.is-drag{scale:1.06;rotate:0deg;cursor:grabbing}
+.it img{width:100%;height:auto;box-shadow:var(--sh-1);pointer-events:none}
+.it figcaption{position:absolute;left:0;top:calc(100% + 8px);white-space:nowrap;font:500 10px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:5px 7px;opacity:0;translate:0 -4px;transition:opacity .3s,translate .3s;pointer-events:none}
+.it:hover figcaption,.it:focus-visible figcaption{opacity:1;translate:0 0}
+.it.is-drag figcaption{opacity:0}
+.it.framed{background:var(--card);padding:clamp(5px,.55vw,9px);box-shadow:var(--sh-1)}
+.it.framed img{box-shadow:none}
+.it.tape::after{content:"";position:absolute;left:50%;top:-11px;width:42%;height:22px;translate:-50% 0;rotate:-4deg;background:var(--tape);box-shadow:0 1px 2px rgba(0,0,0,.14);pointer-events:none}
+.it.pin::after{content:"";position:absolute;left:50%;top:-7px;width:12px;height:12px;translate:-50% 0;border-radius:50%;background:var(--accent);box-shadow:inset -2px -2px 0 rgba(0,0,0,.28),0 3px 5px rgba(0,0,0,.35);pointer-events:none}
+.it.dymo{width:auto;white-space:nowrap;background:#171715;color:var(--paper);padding:.7em 1.1em;border-radius:2px;font:500 clamp(10px,.95vw,14px)/1 var(--f-mono);letter-spacing:.22em;text-transform:uppercase;text-shadow:0 1px 0 rgba(255,255,255,.22);box-shadow:var(--sh-1)}
+.it.swatch{background:var(--card);padding:clamp(8px,.8vw,13px);box-shadow:var(--sh-1);font:500 clamp(9px,.78vw,11px)/1.25 var(--f-mono);letter-spacing:.05em;text-transform:uppercase}
+.it.swatch b{display:block;margin-bottom:.7em;font-weight:500;color:var(--ink-2)}
+.it.swatch ul{list-style:none;margin:0;padding:0;display:grid;gap:.55em}
+.it.swatch li{display:flex;align-items:center;gap:.8em}
+.it.swatch i{flex:none;width:1.9em;height:1.9em}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(18px,2.4vw,40px);align-items:start}
+.about-fig{grid-column:1 / span 5;position:relative;padding-bottom:16%}
+.about-fig figure{margin:0;background:var(--card);padding:clamp(6px,.7vw,10px);box-shadow:var(--sh-1);position:relative}
+.about-fig img{width:100%;height:auto;aspect-ratio:.8}
+.about-fig figcaption{padding-top:8px;font:500 10.5px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2)}
+.af1{rotate:-1.6deg;width:84%}
+.af2{position:absolute!important;right:0;bottom:0;width:42%;rotate:4deg}
+.af2 img{aspect-ratio:1}
+.af1::after,.af2::after{content:"";position:absolute;left:50%;top:-11px;width:34%;height:22px;translate:-50% 0;rotate:-3deg;background:var(--tape);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.about-txt{grid-column:7 / -1;display:grid;gap:clamp(22px,2.6vw,38px)}
+.lead{margin:0;font:400 clamp(22px,2.7vw,40px)/1.16 var(--f-body);letter-spacing:-.018em;text-wrap:pretty}
+.lead strong{font-weight:600}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,2.4vw,40px)}
+.cols p{margin:0;max-width:62ch;text-wrap:pretty}
+.facts{margin:0;display:grid;border-top:1px solid var(--ink)}
+.facts div{display:grid;grid-template-columns:minmax(110px,.35fr) minmax(0,1fr);gap:16px;padding-block:11px;border-bottom:1px solid var(--line)}
+.facts dt{font:500 11px/1.5 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.facts dd{margin:0}
+.contact{margin-top:clamp(48px,7vw,110px);padding-top:18px;border-top:1px solid var(--ink);display:grid;gap:14px}
+.contact .lbl{font:500 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.mail{font:800 clamp(26px,5.6vw,92px)/1 var(--f-display);font-stretch:72%;letter-spacing:-.015em;text-transform:lowercase;overflow-wrap:anywhere}
+.crow{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px}
+.btn,.chip{font:500 11.5px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--ink);background:transparent;padding:10px 13px;cursor:pointer;transition:background .25s,color .25s}
+.btn:hover,.chip:hover,.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* ---------- paintings ---------- */
+.tools{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 20px;padding-block:12px;border-block:1px solid var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.count{font:500 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.wall{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:clamp(40px,5.4vw,88px) clamp(28px,4vw,64px);padding-block:clamp(30px,4vw,64px) 0}
+.pc{--k:clamp(2.6px,.29vw,5px);width:max(124px,calc(var(--cm)*var(--k)));margin:0;cursor:zoom-in;min-width:0;animation:fadeUp .7s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*45ms)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}}
+.pc img{width:100%;height:auto;box-shadow:var(--sh-1);transition:translate .6s cubic-bezier(.2,.8,.2,1),box-shadow .6s}
+.pc:hover img,.pc:focus-visible img{translate:0 -6px;box-shadow:var(--sh-2)}
+.pc figcaption{width:100%;overflow-wrap:anywhere;margin-top:12px;font:400 11px/1.45 var(--f-mono);color:var(--ink-2)}
+.pc figcaption b{display:block;font:600 11px/1.45 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+@supports (animation-timeline:view()){
+  .pc img{animation:unveil linear both;animation-timeline:view();animation-range:entry 0% entry 55%}
+  @keyframes unveil{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+}
+
+/* ---------- books ---------- */
+.bk-list{border-bottom:1px solid var(--ink)}
+.bk{border-top:1px solid var(--ink)}
+.bk-head{display:grid;grid-template-columns:minmax(0,1fr) auto auto 2.4rem;align-items:baseline;gap:6px 28px;width:100%;text-align:left;background:none;border:0;padding:clamp(14px,2vw,26px) 0;cursor:pointer}
+.bk-title{font:800 clamp(30px,5vw,78px)/.95 var(--f-display);font-stretch:68%;text-transform:uppercase;letter-spacing:-.01em;transition:font-stretch .7s cubic-bezier(.2,.8,.2,1),translate .6s cubic-bezier(.2,.8,.2,1),color .3s}
+.bk-head:hover .bk-title,.bk.is-open .bk-title{font-stretch:92%;translate:.5vw 0}
+.bk.is-open .bk-title{color:var(--accent)}
+.bk-year,.bk-fmt{font:500 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase}
+.bk-fmt{color:var(--ink-2)}
+.bk-plus{position:relative;justify-self:end;align-self:center;width:1.5rem;height:1.5rem}
+.bk-plus::before,.bk-plus::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:currentColor;transition:rotate .5s cubic-bezier(.2,.8,.2,1)}
+.bk-plus::after{rotate:90deg}
+.bk.is-open .bk-plus::after{rotate:0deg}
+.bk.is-open .bk-plus::before{rotate:180deg}
+.bk-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .8s cubic-bezier(.2,.8,.2,1)}
+.bk.is-open .bk-panel{grid-template-rows:1fr}
+.bk-inner{overflow:hidden;min-height:0}
+.bk-body{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(18px,2.4vw,40px);padding-block:8px clamp(26px,3.4vw,52px);align-items:start}
+.bk-cover{grid-column:1 / span 3}
+.bk-spreads{grid-column:4 / span 6;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(10px,1.4vw,20px);align-items:start}
+.bk-spreads img{width:100%;height:auto;aspect-ratio:1.4;box-shadow:var(--sh-1)}
+.bk-spreads img:nth-child(2){margin-top:clamp(18px,3vw,48px)}
+.bk-text{grid-column:10 / -1;display:grid;gap:14px}
+.bk-text p{margin:0;text-wrap:pretty}
+.bk-text dl{margin:0;display:grid;border-top:1px solid var(--ink)}
+.bk-text dl div{display:grid;gap:2px;padding-block:8px;border-bottom:1px solid var(--line)}
+.bk-text dt{font:500 10.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.bk-text dd{margin:0;font-size:14px}
+.book3d{perspective:900px}
+.cover{position:relative;width:min(270px,100%);aspect-ratio:var(--ar);transform:rotateY(-24deg) rotateX(4deg);transform-style:preserve-3d;transition:transform .9s cubic-bezier(.2,.8,.2,1);box-shadow:-16px 20px 32px -12px rgba(20,20,18,.45)}
+.book3d:hover .cover{transform:rotateY(-5deg) rotateX(0)}
+.cover::before{content:"";position:absolute;inset:0 auto 0 0;width:7%;z-index:2;background:linear-gradient(90deg,rgba(0,0,0,.32),rgba(255,255,255,.2) 45%,transparent)}
+.cover img{width:100%;height:100%;object-fit:cover}
+.bk-prev{position:fixed;left:0;top:0;z-index:60;width:clamp(120px,14vw,220px);pointer-events:none;opacity:0;scale:.88;transition:opacity .25s,scale .4s cubic-bezier(.2,.8,.2,1);display:none}
+.bk-prev img{width:100%;height:auto;aspect-ratio:.72;object-fit:cover;box-shadow:var(--sh-2)}
+.bk-prev.on{opacity:1;scale:1}
+
+/* ---------- cv ---------- */
+.cv-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 24px;padding-block:12px;border-block:1px solid var(--ink)}
+.cv-sec{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:0 clamp(18px,2.4vw,40px);padding-block:clamp(28px,4vw,56px) 0}
+.cv-h{position:sticky;top:calc(var(--hdr) + env(safe-area-inset-top,0px) + 20px);align-self:start;margin:0;font:800 clamp(22px,2.7vw,42px)/.95 var(--f-display);font-stretch:68%;text-transform:uppercase;letter-spacing:-.01em;text-wrap:balance}
+.cv-rows{border-bottom:1px solid var(--ink)}
+.cv-row{display:grid;grid-template-columns:minmax(78px,130px) minmax(0,1.2fr) minmax(0,1fr);gap:6px 20px;padding:14px 0;border-top:1px solid var(--line);transition:background .25s,color .25s,padding .4s cubic-bezier(.2,.8,.2,1)}
+.cv-rows .cv-row:first-child{border-top-color:var(--ink)}
+.cv-row:hover{background:var(--ink);color:var(--paper);padding-inline:12px}
+.cv-y{font:500 12px/1.6 var(--f-mono);letter-spacing:.05em;font-variant-numeric:tabular-nums}
+.cv-t{font-weight:500;font-size:17px;line-height:1.3}
+.cv-p{color:var(--ink-2);font-size:14px;line-height:1.45;transition:color .25s}
+.cv-row:hover .cv-p{color:var(--paper-dim)}
+
+/* ---------- lightbox ---------- */
+.lb{position:fixed;inset:0;z-index:90;background:rgba(236,235,229,.97);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:max(14px,env(safe-area-inset-top,0px)) var(--gutter) max(16px,env(safe-area-inset-bottom,0px));opacity:0;transition:opacity .3s}
+.lb.on{opacity:1}
+.lb-top,.lb-bot{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px 24px}
+.lb-top{align-items:center;font:500 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase}
+.lb-fig{margin:0;display:grid;place-items:center;min-height:0;padding-block:14px}
+.lb-fig img{max-width:100%;max-height:calc(100svh - 210px);width:auto;height:auto;object-fit:contain;box-shadow:var(--sh-2);animation:lbIn .65s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes lbIn{from{opacity:0;clip-path:inset(0 0 100% 0);scale:1.03}}
+.lb-cap{display:grid;gap:3px;font:400 11.5px/1.45 var(--f-mono);color:var(--ink-2)}
+.lb-cap b{font:800 clamp(22px,3vw,40px)/1 var(--f-display);font-stretch:72%;text-transform:uppercase;letter-spacing:-.01em;color:var(--ink);margin-bottom:6px}
+.lb-nav{display:flex;gap:8px}
+
+/* ---------- cursor ---------- */
+.cur{position:fixed;left:0;top:0;z-index:100;pointer-events:none;display:none}
+.cur-pill{translate:16px 16px;scale:0;transform-origin:0 0;transition:scale .3s cubic-bezier(.2,.8,.2,1);background:var(--accent);color:var(--paper);font:500 10.5px/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;padding:7px 10px;white-space:nowrap}
+.cur.on .cur-pill{scale:1}
+@media (hover:hover) and (pointer:fine){.cur,.bk-prev{display:block}}
+
+/* ---------- responsivo ---------- */
+@media (max-width:1000px) and (min-width:701px){.board{--u:min(1.3vw,1.6svh)}}
+@media (max-width:900px){
+  .about-fig{grid-column:1 / -1;max-width:520px}
+  .about-txt{grid-column:1 / -1}
+  .bk-cover{grid-column:1 / span 5}
+  .bk-spreads{grid-column:6 / -1}
+  .bk-text{grid-column:1 / -1}
+  .cv-sec{grid-template-columns:minmax(0,1fr)}
+  .cv-h{position:static;margin-bottom:12px}
+}
+@media (max-width:700px){
+  .top{padding-block:12px 10px}
+  .nav{width:100%;justify-content:space-between;flex-wrap:wrap;gap:4px 12px}
+  .nav a{font-size:clamp(16px,5vw,24px)}
+  .board{height:auto;--u:1vw}
+  .wordmark{position:static;padding-block:18px 10px}
+  .scatter{position:relative;inset:auto;height:330vw}
+  .it{left:var(--mx);top:var(--my);width:calc(var(--mw)*1vw)}
+  .it.dymo{width:auto}
+  .it figcaption{display:none}
+  .meta{display:none}
+  .mhint{display:block;margin:0 0 6px;font:500 10.5px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+  .page-home .foot{display:flex;margin-top:24px}
+  .cols{grid-template-columns:minmax(0,1fr)}
+  .facts div{grid-template-columns:minmax(0,1fr)}
+  .facts div{gap:2px}
+  .pc{width:clamp(40%,calc(var(--cm)*.6%),100%)}
+  .wall{gap:34px 18px}
+  .bk-head{grid-template-columns:minmax(0,1fr) 2rem;grid-template-areas:"t p" "y p" "f p"}
+  .bk-title{grid-area:t}.bk-year{grid-area:y}.bk-fmt{grid-area:f}.bk-plus{grid-area:p}
+  .bk-cover{grid-column:1 / -1}
+  .bk-spreads{grid-column:1 / -1}
+  .cover{width:min(230px,70%)}
+  .cv-row{grid-template-columns:minmax(0,1fr)}
+  .cv-row:hover{padding-inline:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+</style>
+
+<div class="wipe" id="wipe" aria-hidden="true"></div>
+<div class="cur" id="cur" aria-hidden="true"><div class="cur-pill" id="curTxt">Arraste</div></div>
+<div class="bk-prev" id="bkPrev" aria-hidden="true"><img alt=""></div>
+
+<header class="top" id="top">
+  <a class="id" href="#home" data-go="home"><span id="idName">Nome Sobrenome</span><span id="idRole">Artista visual</span></a>
+  <nav class="nav" aria-label="Principal">
+    <a href="#home" data-go="home"><span class="roll"><span>Home</span><span aria-hidden="true">Home</span></span></a>
+    <a href="#about" data-go="about"><span class="roll"><span>About</span><span aria-hidden="true">About</span></span></a>
+    <a href="#books" data-go="books"><span class="roll"><span>Books</span><span aria-hidden="true">Books</span></span></a>
+    <a href="#paintings" data-go="paintings"><span class="roll"><span>Paintings</span><span aria-hidden="true">Paintings</span></span></a>
+    <a href="#cv" data-go="cv"><span class="roll"><span>CV</span><span aria-hidden="true">CV</span></span></a>
+  </nav>
+</header>
+
+<main id="main">
+  <!-- HOME -->
+  <section class="page page-home is-active" id="page-home" aria-label="Home">
+    <div class="board" id="board">
+      <h1 class="fit wordmark" id="wm" data-cap="34"></h1>
+      <div class="scatter" id="scatter"></div>
+      <p class="meta tl">Artista visual</p>
+      <p class="meta tr">Portfólio 2026</p>
+      <p class="meta bl">Arraste as imagens · clique para ampliar</p>
+      <p class="meta br" id="metaCity">Cidade, País</p>
+    </div>
+    <p class="mhint">Toque nas imagens para ampliar</p>
+    <div data-foot></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page" id="page-about" aria-label="About">
+    <div class="ph">
+      <div class="ph-meta"><span>Sobre</span><span>Pintura · Colagem · Livros de artista</span></div>
+      <h1 class="fit" data-text="About" data-cap="24"></h1>
+    </div>
+    <div class="about">
+      <div class="about-fig">
+        <figure class="af1"><img id="abImg1" alt="Mesa de ateliê com papéis e tintas"><figcaption>Ateliê, 2026</figcaption></figure>
+        <figure class="af2"><img id="abImg2" alt="Detalhe de colagem sobre papel"><figcaption>Detalhe</figcaption></figure>
+      </div>
+      <div class="about-txt">
+        <p class="lead"><strong>Trabalho com pintura, colagem e livros de artista.</strong> Parto de coisas pequenas, restos de papel, mapas dobrados, a luz que atravessa uma janela, e deixo que elas se acumulem até virarem paisagem. Me interesso pelo intervalo entre o que se vê e o que se lembra: a cor como memória, a mancha como lugar.</p>
+        <div class="cols">
+          <p>As pinturas começam sobre papel e só depois ganham escala. Uso óleo, guache e cera em camadas finas, deixando aparecer o que ficou por baixo. O azul volta com frequência, em estudos que funcionam como um diário de cor.</p>
+          <p>Os livros nascem do mesmo gesto. São feitos à mão, em pequenas edições, com costura aparente e papéis de gramaturas diferentes. Cada um funciona como um ateliê portátil, que pode ser folheado em qualquer ordem.</p>
+        </div>
+        <dl class="facts">
+          <div><dt>Nascimento</dt><dd>Cidade, Ano</dd></div>
+          <div><dt>Formação</dt><dd>Bacharelado em Artes Visuais, Universidade, Cidade</dd></div>
+          <div><dt>Técnicas</dt><dd>Óleo, guache, nanquim, colagem, costura</dd></div>
+          <div><dt>Vive e trabalha</dt><dd>Cidade, País</dd></div>
+          <div><dt>Representação</dt><dd>Galeria Meridiano, Cidade</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="contact">
+      <span class="lbl">Contato · exposições, comissões e livros</span>
+      <span class="mail" id="mail">ola@seudominio.com</span>
+      <div class="crow">
+        <button class="btn" type="button" data-copy="mail">Copiar e-mail</button>
+        <span class="count" id="insta">@seuperfil</span>
+      </div>
+    </div>
+    <div data-foot></div>
+  </section>
+
+  <!-- BOOKS -->
+  <section class="page" id="page-books" aria-label="Books">
+    <div class="ph">
+      <div class="ph-meta"><span>Livros de artista e publicações</span><span id="bkCount">5 títulos · 2021–2025</span></div>
+      <h1 class="fit" data-text="Books" data-cap="24"></h1>
+    </div>
+    <div class="bk-list" id="bkList"></div>
+    <div data-foot></div>
+  </section>
+
+  <!-- PAINTINGS -->
+  <section class="page" id="page-paintings" aria-label="Paintings">
+    <div class="ph">
+      <div class="ph-meta"><span>Pinturas e trabalhos sobre papel</span><span>Tamanhos proporcionais entre as obras</span></div>
+      <h1 class="fit" data-text="Paintings" data-cap="24"></h1>
+    </div>
+    <div class="tools">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por série"></div>
+      <span class="count" id="pcount"></span>
+    </div>
+    <div class="wall" id="wall"></div>
+    <div data-foot></div>
+  </section>
+
+  <!-- CV -->
+  <section class="page" id="page-cv" aria-label="CV">
+    <div class="ph">
+      <div class="ph-meta"><span>Curriculum vitae</span><span>Atualizado em outubro de 2026</span></div>
+      <h1 class="fit" data-text="CV" data-cap="22"></h1>
+    </div>
+    <div class="cv-top">
+      <span class="count">Versão completa em PDF sob solicitação</span>
+      <button class="btn" type="button" data-copy="mail2">Copiar e-mail</button>
+      <span class="sr" id="mail2">ola@seudominio.com</span>
+    </div>
+    <div id="cvList"></div>
+    <div data-foot></div>
+  </section>
+</main>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Obra ampliada">
+  <div class="lb-top"><span id="lbCount"></span><button class="btn" type="button" id="lbClose">Fechar · Esc</button></div>
+  <figure class="lb-fig"><img id="lbImg" alt=""></figure>
+  <div class="lb-bot">
+    <div class="lb-cap" id="lbCap"></div>
+    <div class="lb-nav"><button class="btn" type="button" id="lbPrev" aria-label="Obra anterior">← Anterior</button><button class="btn" type="button" id="lbNext" aria-label="Próxima obra">Próxima →</button></div>
+  </div>
+</div>
+
+<script>
+(()=>{
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=n=>String(n).replace('.',',');
+
+/* ================= CONTEÚDO (edite aqui) ================= */
+const SITE={name:'Nome Sobrenome',role:'Artista visual',email:'ola@seudominio.com',insta:'@seuperfil',city:'Cidade, País'};
+const SERIES={jardins:'Jardins de Ruído',carto:'Cartografias',azul:'Estudos de Azul',avulsas:'Avulsas'};
+
+const WORKS=[
+ {id:'p01',t:'Jardim de Ruído I',y:2026,m:'Óleo sobre tela',h:90,w:120,s:'jardins',k:'wash',p:0,seed:11},
+ {id:'p02',t:'Jardim de Ruído II',y:2026,m:'Óleo sobre tela',h:100,w:80,s:'jardins',k:'wash',p:2,seed:23},
+ {id:'p03',t:'Mapa para Ficar',y:2025,m:'Acrílica e colagem sobre papel',h:70,w:50,s:'carto',k:'fields',p:6,seed:35},
+ {id:'p04',t:'Estudo de Azul nº 4',y:2025,m:'Guache sobre papel',h:30,w:30,s:'azul',k:'arches',p:4,seed:47},
+ {id:'p05',t:'Cartografia Lenta',y:2025,m:'Óleo sobre linho',h:150,w:100,s:'carto',k:'gesture',p:0,seed:59},
+ {id:'p06',t:'Horizonte Dobrado',y:2024,m:'Acrílica sobre tela',h:60,w:110,s:'avulsas',k:'lines',p:7,seed:61},
+ {id:'p07',t:'Estudo de Azul nº 7',y:2024,m:'Guache sobre papel',h:24,w:18,s:'azul',k:'halftone',p:4,seed:73},
+ {id:'p08',t:'Sala com Sol',y:2024,m:'Óleo sobre tela',h:130,w:130,s:'avulsas',k:'figure',p:6,seed:85},
+ {id:'p09',t:'Jardim de Ruído III',y:2023,m:'Óleo e cera sobre tela',h:80,w:100,s:'jardins',k:'wash',p:1,seed:97},
+ {id:'p10',t:'Cartografia de Bolso',y:2023,m:'Nanquim e aquarela sobre papel',h:21,w:29.7,s:'carto',k:'mosaic',p:5,seed:109},
+ {id:'p11',t:'Estudo de Azul nº 9',y:2023,m:'Guache sobre papel',h:40,w:30,s:'azul',k:'arches',p:7,seed:121},
+ {id:'p12',t:'Quase Mar',y:2022,m:'Acrílica sobre tela',h:110,w:160,s:'avulsas',k:'gesture',p:4,seed:133},
+ {id:'p13',t:'Pequena Ausência',y:2022,m:'Óleo sobre madeira',h:20,w:20,s:'avulsas',k:'figure',p:3,seed:145},
+ {id:'p14',t:'Vento de Papel',y:2021,m:'Colagem sobre papel',h:50,w:40,s:'avulsas',k:'mosaic',p:1,seed:157},
+ {id:'p15',t:'Cartografia do Intervalo',y:2021,m:'Técnica mista sobre papel',h:90,w:70,s:'carto',k:'halftone',p:2,seed:169},
+];
+WORKS.forEach(w=>{w.ar=w.w/w.h;w.dim=num(w.h)+' × '+num(w.w)+' cm';w.ser=SERIES[w.s]});
+
+const BOOKS=[
+ {id:'b01',t:'Atlas de Coisas Pequenas',y:2025,f:'Livro de artista',pp:64,dim:'22 × 16 cm',ed:'30 exemplares',tec:'Risografia, colagem e costura copta',k:'fields',p:0,seed:201,sp:['mosaic','halftone'],d:'Um inventário de objetos mínimos, como botões, recibos e pedaços de mapa, reorganizados como se fossem territórios. Cada exemplar tem uma página colada à mão.'},
+ {id:'b02',t:'Cartas para um Verão Azul',y:2024,f:'Zine',pp:32,dim:'21 × 14,8 cm',ed:'100 exemplares',tec:'Risografia em duas cores',k:'arches',p:7,seed:213,sp:['lines','figure'],d:'Cartas ilustradas escritas ao longo de um verão e impressas em duas cores. Um livro para ler em sequência ou aos pulos.'},
+ {id:'b03',t:'Caderno de Ausências',y:2023,f:'Livro-objeto',pp:48,dim:'30 × 21 cm',ed:'12 exemplares',tec:'Papéis diversos e capa de tecido',k:'wash',p:5,seed:225,sp:['wash','gesture'],d:'Páginas de papéis diferentes, algumas quase transparentes, que guardam o espaço de coisas que já não estão ali.'},
+ {id:'b04',t:'Quase Jardim',y:2022,f:'Catálogo',pp:96,dim:'24 × 17 cm',ed:'500 exemplares',tec:'Offset, capa dura',k:'gesture',p:1,seed:237,sp:['wash','halftone'],d:'Reúne as pinturas da série homônima, um texto crítico e fotografias do ateliê. Impresso em offset, com capa dura.'},
+ {id:'b05',t:'Sem Título (Livro Costurado)',y:2021,f:'Livro único',pp:40,dim:'40 × 30 cm',ed:'Exemplar único',tec:'Pintura e costura à mão',k:'mosaic',p:2,seed:249,sp:['fields','lines'],d:'Exemplar único, costurado e pintado à mão. Funciona como um caderno de campo entre a pintura e o livro.'},
+];
+BOOKS.forEach(b=>{b.ar=.72;b.m=b.f;b.dimTxt=b.dim});
+
+const CV=[
+ {h:'Exposições individuais',r:[['2026','Jardim de Ruído','Galeria Meridiano, Cidade'],['2024','Cartografias Lentas','Espaço Fábrica, Cidade'],['2022','Quase Mar','Casa das Artes, Cidade']]},
+ {h:'Exposições coletivas',r:[['2025','Papel, Tinta, Tempo','Museu de Arte Contemporânea, Cidade'],['2024','Livros que se Abrem','Biblioteca Municipal, Cidade'],['2023','Salão de Pequenos Formatos','Galeria Meridiano, Cidade'],['2021','Ateliês Abertos','Distrito das Artes, Cidade']]},
+ {h:'Residências e bolsas',r:[['2025','Residência artística','Nome da residência, Cidade'],['2023','Bolsa de criação','Nome da instituição, País']]},
+ {h:'Publicações',r:[['2025','Atlas de Coisas Pequenas','Livro de artista, 30 ex.'],['2024','Cartas para um Verão Azul','Zine, 100 ex.'],['2023','Caderno de Ausências','Livro-objeto, 12 ex.'],['2022','Quase Jardim','Catálogo, 500 ex.']]},
+ {h:'Formação',r:[['2014–2018','Bacharelado em Artes Visuais','Universidade, Cidade'],['2020','Gravura e livro de artista','Ateliê de gravura, Cidade']]},
+ {h:'Coleções',r:[['—','Coleções particulares','Cidade, País'],['—','Acervo institucional','Nome da instituição']]},
+];
+
+/* moodboard: posição em % (desktop), largura em unidades u, rotação; mx/my/mw = celular */
+const HOME=[
+ {id:'p05',x:3,y:9,w:13,r:-2.5,mx:4,my:1.5,mw:46,d:.7,z:3,cls:'tape'},
+ {id:'p04',x:21,y:3,w:9,r:1.5,mx:56,my:4,mw:32,d:.4,z:4,cls:'pin'},
+ {id:'p01',x:32,y:7,w:21,r:.8,mx:36,my:13.5,mw:54,d:.9,z:2,cls:'framed'},
+ {id:'p07',x:57,y:3,w:10,r:-1.2,mx:5,my:22,mw:34,d:.5,z:5,cls:'tape'},
+ {id:'b01',x:74,y:9,w:13,r:2.2,mx:52,my:26,mw:42,d:.8,z:3,cls:''},
+ {id:'p13',x:88,y:47,w:8,r:-3,mx:12,my:35,mw:28,d:.3,z:6,cls:'pin'},
+ {id:'p12',x:66,y:55,w:17,r:1.2,mx:44,my:40,mw:46,d:.6,z:4,cls:'tape'},
+ {id:'p11',x:47,y:58,w:8,r:-1.8,mx:3,my:47,mw:36,d:.35,z:5,cls:'framed'},
+ {id:'p10',x:27,y:57,w:15,r:2,mx:50,my:54,mw:42,d:.75,z:3,cls:''},
+ {id:'p03',x:6,y:54,w:11,r:-1.5,mx:8,my:61,mw:40,d:.5,z:4,cls:'tape'},
+ {id:'p14',x:19,y:74,w:8,r:3,mx:58,my:68,mw:28,d:.9,z:6,cls:''},
+ {id:'p08',x:56,y:76,w:10,r:-.8,mx:6,my:75,mw:44,d:.45,z:3,cls:'framed'},
+ {type:'dymo',text:'Pintura · Livro · Colagem',x:37,y:27,w:12,r:-4,mx:6,my:96,mw:44,d:1,z:7},
+ {type:'swatch',x:84,y:72,w:10,r:2.5,mx:60,my:84,mw:34,d:.6,z:5},
+];
+
+/* ================= ARTE PROCEDURAL (substitua por suas imagens) ================= */
+const PAL=[
+ ['#E9E1D2','#C9472B','#1D2A5B','#F0B429','#16161A'],
+ ['#DDE5D6','#2F6B58','#E7829E','#F2E3B3','#15201D'],
+ ['#EDE6F4','#3D35C9','#F29E4C','#CFC6F0','#12112B'],
+ ['#F2E7DA','#9AA6B2','#D8432B','#2A2A2A','#F7C9B6'],
+ ['#DCE6F0','#0E3C96','#F4D24A','#E8977A','#0B1633'],
+ ['#EFEDE6','#A7A79F','#4A4A45','#7B7B73','#111111'],
+ ['#F5DAD0','#8B2D3A','#F2C766','#27433C','#1F1416'],
+ ['#E7EEF2','#1F5FD9','#F7F3EA','#FF6B3D','#0A1A3A'],
+];
+const rng=seed=>{let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
+const hexA=(h,a)=>{const n=parseInt(h.slice(1),16);return 'rgba('+(n>>16)+','+(n>>8&255)+','+(n&255)+','+a+')'};
+const TAU=6.2832;
+const PAINT={
+ wash(x,W,H,S,R,P,rnd,ri){
+  for(let i=0;i<7;i++){const cx=rnd(0,W),cy=rnd(0,H),r=rnd(S*.35,S*.9),g=x.createRadialGradient(cx,cy,0,cx,cy,r),c=P[ri(1,3)];g.addColorStop(0,hexA(c,.85));g.addColorStop(1,hexA(c,0));x.fillStyle=g;x.fillRect(0,0,W,H)}
+  x.lineCap='round';
+  for(let i=0;i<46;i++){const y=rnd(0,H),x0=rnd(-20,W*.4);x.strokeStyle=hexA(P[ri(0,4)],rnd(.05,.16));x.lineWidth=rnd(3,22);x.beginPath();x.moveTo(x0,y);x.bezierCurveTo(x0+W*.3,y+rnd(-30,30),x0+W*.6,y+rnd(-30,30),x0+W*rnd(.7,1.2),y+rnd(-20,20));x.stroke()}
+  const mw=rnd(S*.04,S*.1);x.fillStyle=hexA(P[4],.9);x.fillRect(rnd(W*.15,W*.8),rnd(H*.1,H*.7),mw,mw*rnd(2,6));
+ },
+ fields(x,W,H,S,R,P,rnd,ri){
+  x.globalCompositeOperation='multiply';
+  [P[1],P[2],P[3]].forEach(c=>{const bw=rnd(W*.35,W*.8),bh=rnd(H*.3,H*.75);x.fillStyle=c;x.fillRect(rnd(0,W-bw),rnd(0,H-bh),bw,bh)});
+  x.fillStyle=P[4];x.beginPath();x.arc(rnd(W*.3,W*.7),rnd(H*.3,H*.7),S*rnd(.1,.2),0,TAU);x.fill();
+  x.globalCompositeOperation='source-over';
+  x.strokeStyle=hexA(P[4],.7);x.lineWidth=1.5;const b=W*.06;x.strokeRect(b,b,W-2*b,H-2*b);
+ },
+ arches(x,W,H,S,R,P,rnd,ri){
+  const n=ri(5,8),cx=rnd(W*.3,W*.7),cy=H*rnd(.55,.85),step=Math.min(W*.5,cy)/n*.95;
+  for(let i=n;i>0;i--){const r=i*step;x.fillStyle=P[1+(i%3)];x.beginPath();x.arc(cx,cy,r,Math.PI,0);x.lineTo(cx+r,H);x.lineTo(cx-r,H);x.closePath();x.fill()}
+  x.fillStyle=P[4];x.beginPath();x.arc(cx,cy,step*.5,Math.PI,0);x.lineTo(cx+step*.5,H);x.lineTo(cx-step*.5,H);x.fill();
+  x.fillStyle=P[3];x.beginPath();x.arc(rnd(W*.1,W*.9),rnd(H*.08,H*.25),S*.07,0,TAU);x.fill();
+ },
+ gesture(x,W,H,S,R,P,rnd,ri){
+  const n=ri(5,8);x.lineCap='round';
+  for(let s=0;s<n;s++){
+   const col=P[ri(1,4)],x0=rnd(-.1*W,W*.6),y0=rnd(0,H),x1=x0+rnd(W*.4,W),y1=y0+rnd(-H*.4,H*.4),cx=(x0+x1)/2+rnd(-W*.2,W*.2),cy=(y0+y1)/2+rnd(-H*.25,H*.25),bw=rnd(S*.06,S*.16);
+   for(let b=0;b<22;b++){const o=(b/22-.5)*bw;x.strokeStyle=hexA(col,rnd(.35,.8));x.lineWidth=rnd(1.5,4);x.beginPath();x.moveTo(x0,y0+o);x.quadraticCurveTo(cx,cy+o+rnd(-3,3),x1,y1+o+rnd(-5,5));x.stroke()}
+  }
+ },
+ lines(x,W,H,S,R,P,rnd,ri){
+  const n=ri(6,9),ph=rnd(0,6),f=rnd(.008,.02);
+  for(let i=0;i<n;i++){
+   const y=H*(i/n)*.9+H*.08,amp=rnd(4,26);
+   x.fillStyle=P[1+(i%3)];x.beginPath();x.moveTo(0,H);
+   for(let px=0;px<=W;px+=6)x.lineTo(px,y+Math.sin(px*f+ph+i)*amp);
+   x.lineTo(W,H);x.closePath();x.fill();
+   x.strokeStyle=hexA(P[4],.55);x.lineWidth=1.2;x.beginPath();
+   for(let px=0;px<=W;px+=6){const yy=y+Math.sin(px*f+ph+i)*amp;px?x.lineTo(px,yy):x.moveTo(px,yy)}
+   x.stroke();
+  }
+ },
+ halftone(x,W,H,S,R,P,rnd,ri){
+  const layer=(col,ang,sp,k)=>{
+   x.save();x.translate(W/2,H/2);x.rotate(ang);x.fillStyle=col;x.globalCompositeOperation='multiply';
+   const m=Math.hypot(W,H)/2,fx=rnd(-m*.4,m*.4),fy=rnd(-m*.4,m*.4),rr=m*k;
+   for(let yy=-m;yy<=m;yy+=sp)for(let xx=-m;xx<=m;xx+=sp){const d=Math.hypot(xx-fx,yy-fy)/rr,r=sp*.62*Math.max(0,1-d);if(r>.5){x.beginPath();x.arc(xx,yy,r,0,TAU);x.fill()}}
+   x.restore();
+  };
+  layer(P[1],.26,rnd(11,15),rnd(.8,1.1));layer(P[2],1.3,rnd(11,15),rnd(.8,1.1));
+ },
+ figure(x,W,H,S,R,P,rnd,ri){
+  x.shadowColor='rgba(0,0,0,.22)';x.shadowBlur=14;x.shadowOffsetY=6;
+  x.fillStyle=P[1];x.fillRect(W*rnd(.08,.25),H*rnd(.1,.25),W*rnd(.45,.6),H*rnd(.5,.65));
+  x.fillStyle=P[3];x.beginPath();x.arc(W*rnd(.45,.75),H*rnd(.3,.6),S*rnd(.14,.24),0,TAU);x.fill();
+  x.fillStyle=P[2];x.beginPath();x.arc(W*rnd(.2,.5),H*rnd(.65,.85),S*rnd(.14,.22),Math.PI,0);x.fill();
+  x.fillStyle=P[4];for(let i=0;i<4;i++)x.fillRect(W*(.62+i*.06),H*.08,W*.025,H*rnd(.25,.45));
+  x.shadowColor='transparent';
+ },
+ mosaic(x,W,H,S,R,P,rnd,ri){
+  const cols=ri(3,5),cw=W/cols,rows=Math.max(2,Math.round(H/cw)),ch=H/rows;
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+   if(R()<.18)continue;
+   x.fillStyle=P[ri(1,4)];const px=c*cw,py=r*ch,t=R();
+   if(t<.45)x.fillRect(px+3,py+3,cw-6,ch-6);
+   else if(t<.7){x.beginPath();x.arc(px+cw/2,py+ch/2,Math.min(cw,ch)/2-4,0,TAU);x.fill()}
+   else if(t<.85){x.beginPath();x.moveTo(px+3,py+ch-3);x.lineTo(px+cw-3,py+ch-3);x.lineTo(px+cw-3,py+3);x.closePath();x.fill()}
+   else{x.beginPath();x.arc(px+cw/2,py+ch,Math.min(cw/2,ch)-4,Math.PI,0);x.fill()}
+  }
+ },
+};
+function paint(w){
+  const R=rng(w.seed),P=PAL[w.p],long=720;
+  const W=w.ar>=1?long:Math.round(long*w.ar),H=w.ar>=1?Math.round(long/w.ar):long;
+  const c=document.createElement('canvas');c.width=W;c.height=H;
+  const x=c.getContext('2d');
+  x.fillStyle=P[0];x.fillRect(0,0,W,H);
+  const rnd=(a,b)=>a+(b-a)*R(),ri=(a,b)=>Math.floor(rnd(a,b+1));
+  PAINT[w.k](x,W,H,Math.min(W,H),R,P,rnd,ri);
+  for(let i=0;i<W*H/38;i++){x.fillStyle=R()<.5?'rgba(0,0,0,'+(R()*.07)+')':'rgba(255,255,255,'+(R()*.1)+')';x.fillRect(R()*W,R()*H,1.3,1.3)}
+  const g=x.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);
+  g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(20,16,10,.16)');x.fillStyle=g;x.fillRect(0,0,W,H);
+  return c.toDataURL('image/jpeg',.9);
+}
+const CACHE=new Map();
+const art=w=>{let u=CACHE.get(w.id);if(!u){u=paint(w);CACHE.set(w.id,u)}return u};
+const ALL=new Map([...WORKS,...BOOKS].map(w=>[w.id,w]));
+
+/* ================= TÍTULOS EM LARGURA TOTAL ================= */
+function splitTitle(el,text){
+  el.innerHTML='<span class="sr">'+esc(text)+'</span><span class="fit-in" aria-hidden="true">'+[...text].map((c,i)=>'<span class="ch" style="--i:'+i+'">'+(c===' '?'&nbsp;':esc(c))+'</span>').join('')+'</span>';
+}
+function fit(el){
+  const inn=$('.fit-in',el);if(!inn||!el.clientWidth)return;
+  el.style.fontSize='100px';
+  const w=inn.getBoundingClientRect().width;if(!w)return;
+  let s=100*el.clientWidth/w;
+  const cap=parseFloat(el.dataset.cap||0);if(cap)s=Math.min(s,cap*innerWidth/100);
+  el.style.fontSize=s.toFixed(2)+'px';
+}
+const fitAll=()=>$$('.page.is-active .fit').forEach(fit);
+
+/* ================= ROTEAMENTO ================= */
+const PAGES=['home','about','books','paintings','cv'];
+let cur='home',busy=false;const built={};
+function show(name){
+  PAGES.forEach(p=>$('#page-'+p).classList.toggle('is-active',p===name));
+  $$('.nav a').forEach(a=>a.dataset.go===name?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current'));
+  cur=name;window.scrollTo(0,0);
+  if(!built[name]){built[name]=true;({home:()=>{},about:buildAbout,books:buildBooks,paintings:buildPaintings,cv:buildCV})[name]()}
+  fitAll();
+}
+async function go(name){
+  if(!PAGES.includes(name)||name===cur||busy)return;
+  busy=true;const wipe=$('#wipe');
+  try{
+    if(!reduce){wipe.className='wipe in';await wait(430)}
+    show(name);
+    try{history.replaceState(null,'','#'+name)}catch(_){}
+    if(!reduce){wipe.className='wipe out';await wait(450)}
+  }finally{wipe.className='wipe';busy=false}
+}
+document.addEventListener('click',e=>{
+  const a=e.target.closest('[data-go]');
+  if(a){e.preventDefault();go(a.dataset.go)}
+  if(e.target.closest('[data-top]'))scrollTo({top:0,behavior:reduce?'auto':'smooth'});
+  const c=e.target.closest('[data-copy]');
+  if(c){const src=$('#'+c.dataset.copy),t=src.textContent,old=c.textContent;
+    const done=m=>{c.textContent=m;setTimeout(()=>c.textContent=old,1800)};
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>done('Copiado'),()=>{
+      const r=document.createRange();r.selectNodeContents(src);const s=getSelection();s.removeAllRanges();s.addRange(r);done('Selecionado');
+    });
+  }
+});
+addEventListener('hashchange',()=>go(location.hash.slice(1)));
+
+/* ================= RODAPÉ ================= */
+$$('[data-foot]').forEach(f=>f.outerHTML='<footer class="foot"><span>© 2026 '+esc(SITE.name)+'</span><span>Todos os direitos reservados</span><button class="toplink" type="button" data-top>Voltar ao topo ↑</button></footer>');
+
+/* ================= LIGHTBOX ================= */
+const lb=$('#lb'),lbImg=$('#lbImg');let L={list:[],i:0,from:null};
+function lbOpen(list,i){
+  L={list,i,from:document.activeElement};lb.hidden=false;document.body.style.overflow='hidden';
+  lbRender();requestAnimationFrame(()=>lb.classList.add('on'));$('#lbClose').focus();
+}
+function lbRender(){
+  const w=L.list[L.i];
+  lbImg.style.animation='none';void lbImg.offsetWidth;lbImg.style.animation='';
+  lbImg.src=art(w);lbImg.alt=w.t+', '+w.y;
+  $('#lbCap').innerHTML='<b>'+esc(w.t)+'</b><span>'+w.y+' · '+esc(w.m)+'</span><span>'+esc(w.dim||w.dimTxt||'')+'</span>'+(w.ser?'<span>Série '+esc(w.ser)+'</span>':'');
+  $('#lbCount').textContent=String(L.i+1).padStart(2,'0')+' / '+String(L.list.length).padStart(2,'0');
+  const many=L.list.length>1;$('#lbPrev').hidden=!many;$('#lbNext').hidden=!many;
+}
+function lbStep(d){L.i=(L.i+d+L.list.length)%L.list.length;lbRender()}
+function lbClose(){
+  lb.classList.remove('on');document.body.style.overflow='';
+  setTimeout(()=>{lb.hidden=true},reduce?0:300);
+  if(L.from&&L.from.focus)L.from.focus();
+}
+$('#lbClose').addEventListener('click',lbClose);
+$('#lbPrev').addEventListener('click',()=>lbStep(-1));
+$('#lbNext').addEventListener('click',()=>lbStep(1));
+lb.addEventListener('click',e=>{if(e.target===lb||e.target.classList.contains('lb-fig'))lbClose()});
+addEventListener('keydown',e=>{
+  if(lb.hidden)return;
+  if(e.key==='Escape')lbClose();
+  else if(e.key==='ArrowLeft'&&L.list.length>1)lbStep(-1);
+  else if(e.key==='ArrowRight'&&L.list.length>1)lbStep(1);
+});
+
+/* ================= HOME ================= */
+const HOMEWORKS=HOME.filter(h=>h.id).map(h=>ALL.get(h.id));
+function buildHome(){
+  splitTitle($('#wm'),SITE.name);
+  $('#scatter').innerHTML=HOME.map((h,i)=>{
+    const base='style="--x:'+h.x+'%;--y:'+h.y+'%;--w:'+h.w+';--r:'+h.r+'deg;--mx:'+h.mx+'%;--my:'+h.my+'%;--mw:'+h.mw+';--d:'+h.d+';--z:'+h.z+'" data-cursor="Arraste"';
+    if(h.type==='dymo')return '<div class="it dymo" '+base+'>'+esc(h.text)+'</div>';
+    if(h.type==='swatch')return '<div class="it swatch" '+base+'><b>Paleta · out. 2026</b><ul><li><i style="background:#2B3FD6"></i>Azul cobalto</li><li><i style="background:#D9A441"></i>Ocre</li><li><i style="background:#C98A94"></i>Rosa velho</li><li><i style="background:#1B1B19"></i>Preto de marfim</li></ul></div>';
+    const w=ALL.get(h.id),fig=String(HOMEWORKS.indexOf(w)+1).padStart(2,'0');
+    return '<figure class="it '+h.cls+'" '+base+' data-id="'+w.id+'" role="button" tabindex="0" aria-label="Ampliar '+esc(w.t)+'"><img alt="'+esc(w.t)+', '+w.y+'" style="aspect-ratio:'+w.ar.toFixed(4)+'" draggable="false"><figcaption>Fig. '+fig+' · '+esc(w.t)+', '+w.y+'</figcaption></figure>';
+  }).join('');
+}
+async function revealHome(){
+  const els=$$('#scatter .it');
+  try{
+    for(const el of els){
+      if(el.dataset.id){el.querySelector('img').src=art(ALL.get(el.dataset.id))}
+      el.classList.add('in');
+      await wait(reduce?0:75);
+    }
+  }finally{els.forEach(el=>el.classList.add('in'))}
+}
+function homeInteractions(){
+  const sc=$('#scatter'),board=$('#board');
+  let it=null,sx=0,sy=0,ox=0,oy=0,moved=false,z=20,justDragged=false;
+  sc.addEventListener('pointerdown',e=>{
+    justDragged=false;
+    if(e.pointerType==='touch'||e.button>0)return;
+    const t=e.target.closest('.it');if(!t)return;
+    it=t;moved=false;sx=e.clientX;sy=e.clientY;ox=parseFloat(t.dataset.dx||0);oy=parseFloat(t.dataset.dy||0);
+    t.style.zIndex=++z;t.classList.add('is-drag');
+    try{t.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  sc.addEventListener('pointermove',e=>{
+    if(!it)return;const dx=e.clientX-sx,dy=e.clientY-sy;
+    if(!moved&&Math.hypot(dx,dy)>5)moved=true;
+    if(moved){it.dataset.dx=ox+dx;it.dataset.dy=oy+dy;it.style.setProperty('--dx',(ox+dx)+'px');it.style.setProperty('--dy',(oy+dy)+'px')}
+  });
+  const end=()=>{if(!it)return;it.classList.remove('is-drag');justDragged=moved;it=null};
+  sc.addEventListener('pointerup',end);sc.addEventListener('pointercancel',end);
+  const open=t=>{const w=ALL.get(t.dataset.id);lbOpen(HOMEWORKS,HOMEWORKS.indexOf(w))};
+  sc.addEventListener('click',e=>{const t=e.target.closest('.it[data-id]');if(!t||justDragged)return;open(t)});
+  sc.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const t=e.target.closest('.it[data-id]');if(!t)return;e.preventDefault();open(t)});
+  if(fine&&!reduce){
+    let px=0,py=0,tx=0,ty=0,ra=0;
+    const loop=()=>{px+=(tx-px)*.08;py+=(ty-py)*.08;board.style.setProperty('--px',px.toFixed(2)+'px');board.style.setProperty('--py',py.toFixed(2)+'px');ra=(Math.abs(tx-px)+Math.abs(ty-py)>.05)?requestAnimationFrame(loop):0};
+    board.addEventListener('pointermove',e=>{const r=board.getBoundingClientRect();tx=-((e.clientX-r.left)/r.width-.5)*36;ty=-((e.clientY-r.top)/r.height-.5)*26;if(!ra)ra=requestAnimationFrame(loop)});
+    board.addEventListener('pointerleave',()=>{tx=0;ty=0;if(!ra)ra=requestAnimationFrame(loop)});
+  }
+}
+
+/* ================= ABOUT ================= */
+function buildAbout(){
+  splitTitle($('#page-about .fit'),'About');
+  $('#abImg1').src=art({id:'ab1',k:'wash',p:3,seed:301,ar:.8});
+  $('#abImg2').src=art({id:'ab2',k:'mosaic',p:6,seed:311,ar:1});
+}
+
+/* ================= PAINTINGS ================= */
+let filter='todas';
+function buildPaintings(){
+  splitTitle($('#page-paintings .fit'),'Paintings');
+  const keys=['todas',...Object.keys(SERIES)];
+  $('#chips').innerHTML=keys.map(k=>'<button class="chip" type="button" data-f="'+k+'" aria-pressed="'+(k===filter)+'">'+(k==='todas'?'Todas':esc(SERIES[k]))+'</button>').join('');
+  $('#chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;filter=b.dataset.f;$$('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));renderWall()});
+  $('#wall').addEventListener('click',e=>{const f=e.target.closest('.pc');if(f)openWork(f)});
+  $('#wall').addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const f=e.target.closest('.pc');if(f){e.preventDefault();openWork(f)}});
+  renderWall();
+}
+let wallList=[];
+function openWork(f){lbOpen(wallList,wallList.findIndex(w=>w.id===f.dataset.id))}
+function renderWall(){
+  wallList=WORKS.filter(w=>filter==='todas'||w.s===filter);
+  $('#wall').innerHTML=wallList.map((w,i)=>'<figure class="pc" style="--cm:'+w.w+';--i:'+i+'" data-id="'+w.id+'" data-cursor="Ver" role="button" tabindex="0" aria-label="Ampliar '+esc(w.t)+'"><img src="'+art(w)+'" alt="'+esc(w.t)+', '+w.y+'" style="aspect-ratio:'+w.ar.toFixed(4)+'"><figcaption><b>'+esc(w.t)+', '+w.y+'</b>'+esc(w.m)+'<br>'+esc(w.dim)+'</figcaption></figure>').join('');
+  const ys=wallList.map(w=>w.y);
+  $('#pcount').textContent=wallList.length+' obras · '+Math.min(...ys)+'–'+Math.max(...ys);
+}
+
+/* ================= BOOKS ================= */
+function buildBooks(){
+  splitTitle($('#page-books .fit'),'Books');
+  const ys=BOOKS.map(b=>b.y);
+  $('#bkCount').textContent=BOOKS.length+' títulos · '+Math.min(...ys)+'–'+Math.max(...ys);
+  const list=$('#bkList');
+  list.innerHTML=BOOKS.map((b,i)=>
+   '<article class="bk" data-i="'+i+'"><button class="bk-head" type="button" aria-expanded="false" aria-controls="bkp'+i+'" data-cursor="Abrir"><span class="bk-title">'+esc(b.t)+'</span><span class="bk-year">'+b.y+'</span><span class="bk-fmt">'+esc(b.f)+' · '+b.pp+' pp.</span><span class="bk-plus" aria-hidden="true"></span></button>'+
+   '<div class="bk-panel" id="bkp'+i+'" inert><div class="bk-inner"><div class="bk-body">'+
+   '<div class="bk-cover"><div class="book3d"><div class="cover" style="--ar:.72"><img alt="Capa de '+esc(b.t)+'" src="'+art(b)+'"></div></div></div>'+
+   '<div class="bk-spreads"><img alt="Páginas internas de '+esc(b.t)+'"><img alt="Mais páginas de '+esc(b.t)+'"></div>'+
+   '<div class="bk-text"><p>'+esc(b.d)+'</p><dl><div><dt>Formato</dt><dd>'+esc(b.dim)+' · '+b.pp+' páginas</dd></div><div><dt>Edição</dt><dd>'+esc(b.ed)+'</dd></div><div><dt>Técnica</dt><dd>'+esc(b.tec)+'</dd></div></dl></div>'+
+   '</div></div></div></article>').join('');
+  const toggle=(art_,open)=>{
+    art_.classList.toggle('is-open',open);
+    $('.bk-head',art_).setAttribute('aria-expanded',open);
+    const panel=$('.bk-panel',art_);panel.inert=!open;
+    if(open&&!panel.dataset.ready){
+      panel.dataset.ready='1';const b=BOOKS[+art_.dataset.i],imgs=$$('.bk-spreads img',panel);
+      imgs.forEach((im,j)=>{im.src=art({id:b.id+'s'+j,k:b.sp[j],p:(b.p+3+j*2)%8,seed:b.seed+7+j*5,ar:1.4})});
+    }
+  };
+  list.addEventListener('click',e=>{
+    const h=e.target.closest('.bk-head');if(!h)return;
+    const a=h.parentElement,open=!a.classList.contains('is-open');
+    $$('.bk.is-open',list).forEach(x=>x!==a&&toggle(x,false));
+    toggle(a,open);
+    $('#bkPrev').classList.remove('on');
+    if(open&&!reduce)setTimeout(()=>a.scrollIntoView({block:'nearest',behavior:'smooth'}),350);
+  });
+  if(fine){
+    const pv=$('#bkPrev'),pimg=$('img',pv);let tx=0,ty=0,x=0,y=0,vx=0,ra=0;
+    const tick=()=>{vx=tx-x;x+=(tx-x)*.18;y+=(ty-y)*.18;pv.style.transform='translate3d('+(x+30)+'px,'+(y-90)+'px,0) rotate('+Math.max(-9,Math.min(9,vx*.12))+'deg)';ra=(Math.abs(tx-x)+Math.abs(ty-y)>.3)?requestAnimationFrame(tick):0};
+    list.addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;if(!ra)ra=requestAnimationFrame(tick)});
+    list.addEventListener('pointerover',e=>{
+      const h=e.target.closest('.bk-head');
+      if(h&&!h.parentElement.classList.contains('is-open')){pimg.src=art(BOOKS[+h.parentElement.dataset.i]);if(!pv.classList.contains('on')){x=tx;y=ty}pv.classList.add('on')}
+      else pv.classList.remove('on');
+    });
+    list.addEventListener('pointerleave',()=>pv.classList.remove('on'));
+  }
+}
+
+/* ================= CV ================= */
+function buildCV(){
+  splitTitle($('#page-cv .fit'),'CV');
+  $('#cvList').innerHTML=CV.map(s=>'<section class="cv-sec"><h2 class="cv-h">'+esc(s.h)+'</h2><div class="cv-rows">'+s.r.map(r=>'<div class="cv-row"><span class="cv-y">'+esc(r[0])+'</span><span class="cv-t">'+esc(r[1])+'</span><span class="cv-p">'+esc(r[2])+'</span></div>').join('')+'</div></section>').join('');
+}
+
+/* ================= CURSOR ================= */
+if(fine){
+  const c=$('#cur'),txt=$('#curTxt');let tx=0,ty=0,x=0,y=0,ra=0;
+  const tick=()=>{x+=(tx-x)*.25;y+=(ty-y)*.25;c.style.transform='translate3d('+x+'px,'+y+'px,0)';ra=(Math.abs(tx-x)+Math.abs(ty-y)>.3)?requestAnimationFrame(tick):0};
+  addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;if(!ra)ra=requestAnimationFrame(tick)},{passive:true});
+  document.addEventListener('pointerover',e=>{const t=e.target.closest&&e.target.closest('[data-cursor]');if(t&&lb.hidden){txt.textContent=t.dataset.cursor;c.classList.add('on')}else c.classList.remove('on')});
+  document.addEventListener('pointerleave',()=>c.classList.remove('on'));
+}
+
+/* ================= INICIALIZAÇÃO ================= */
+$('#idName').textContent=SITE.name;$('#idRole').textContent=SITE.role;
+$('#metaCity').textContent=SITE.city;$('#mail').textContent=SITE.email;$('#mail2').textContent=SITE.email;$('#insta').textContent=SITE.insta;
+new ResizeObserver(()=>document.documentElement.style.setProperty('--hdr',$('#top').offsetHeight+'px')).observe($('#top'));
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(fitAll,80)});
+
+buildHome();homeInteractions();
+const start=location.hash.slice(1);
+built.home=true;
+if(PAGES.includes(start)&&start!=='home'){show(start)}else{show('home')}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fitAll);
+revealHome().then(async()=>{
+  for(const w of [...WORKS,...BOOKS]){if(!CACHE.has(w.id)){art(w);await wait(60)}}
+});
+})();
+</script>
+
+</body></html>

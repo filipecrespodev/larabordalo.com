@@ -1,35 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import Base from '../layouts/Base.astro';
-import { getProjects } from '../lib/projects';
-
-const projects = await getProjects();
+import Home from '../views/Home.astro';
 ---
 
-<Base image={projects[0]?.data.cover}>
-  <section class="project-covers">
-    {
-      projects.map(({ id, data }, i) => (
-        <a class="project-cover" href={`/${id}`}>
-          <div class="cover">
-            <Image
-              src={data.cover}
-              alt={data.title}
-              widths={[400, 640, 960, 1280].filter((w) => w <= data.cover.width)}
-              sizes="(max-width: 540px) 100vw, (max-width: 932px) 50vw, min(480px, 30vw)"
-              format="webp"
-              quality={85}
-              loading={i < 6 ? 'eager' : 'lazy'}
-            />
-          </div>
-          <div class="details">
-            <div class="title">{data.title}</div>
-            {data.year && <div class="date">{data.year}</div>}
-            {data.category && <div class="custom">{data.category}</div>}
-            {data.medium && <div class="custom">{data.medium}</div>}
-          </div>
-        </a>
-      ))
-    }
-  </section>
-</Base>
+<Home lang="en" />

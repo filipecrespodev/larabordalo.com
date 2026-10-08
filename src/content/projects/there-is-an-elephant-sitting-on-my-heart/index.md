@@ -1,11 +1,20 @@
 ---
 title: "There is an elephant sitting on my heart"
+kind: "book"
 year: 2025
-category: "Book published"
-medium: "mixed media"
 order: 2
 cover: "./cover.jpg"
-description: "In this heartfelt and delicate story, a young girl feels an elephant in her heart - then several, suffocating her like fears and anxieties. With her sister’s support, she learns to recognize and express her emotions, lightening the burden of these feelings. - This book was brilliant written by Anna Claudia Ramos and published in Brazil by Editora Elo."
+category: "Picture book"
+medium: "mixed media"
+author: "Anna Claudia Ramos"
+publisher: "Editora Elo (Brazil)"
+bookCover: "./01.jpg"
+description: "In this heartfelt and delicate story, a young girl feels an elephant in her heart, then several, suffocating her like fears and anxieties. With her sister’s support, she learns to recognize and express her emotions, lightening the burden of these feelings."
+pt:
+  title: "Tem um elefante sentado no meu coração"
+  category: "Livro ilustrado"
+  medium: "técnica mista"
+  description: "Nesta história sensível e delicada, uma menina sente um elefante no coração, e depois vários, que a sufocam como medos e ansiedades. Com o apoio da irmã, aprende a reconhecer e a expressar as suas emoções, aliviando o peso desses sentimentos."
 blocks:
   - type: grid
     width: 80

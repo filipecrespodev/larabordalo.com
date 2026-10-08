@@ -1,23 +1,13 @@
 export const SITE = {
   name: 'Lara Bordalo',
-  title: 'Lara Bordalo Illustration',
-  description:
-    'My name is Lara Bordalo, I am a Brazilian graphic artist and I am currently based in Portugal. I work mixing art, illustration and design.',
-  keywords: 'art,illustration,design,books,kids illustration,advertising illustration',
   email: 'art@larabordalo.com',
-  lang: 'en',
+  instagram: '@larabordalo',
+  keywords: 'illustration,picture books,children books,author,illustrator,mixed media,collage,Portugal,Brazil',
 };
 
-export const NAV = [
-  { href: '/', label: 'Ilustrattion' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
-];
-
 export const SOCIAL = [
-  { icon: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/larabordalo' },
-  { icon: 'pinterest', label: 'Pinterest', href: 'https://www.pinterest.pt/alarabordalo/' },
-  { icon: 'email', label: 'Email', href: `mailto:${SITE.email}` },
+  { label: 'Instagram', href: 'https://www.instagram.com/larabordalo' },
+  { label: 'Pinterest', href: 'https://www.pinterest.pt/alarabordalo/' },
 ] as const;
 
 /**

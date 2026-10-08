@@ -1,57 +1,108 @@
 ---
-// Fullscreen viewer for every `[data-lightbox]` link on the page.
-// Without JavaScript the links simply open the large image.
+// Fullscreen viewer for every `a[data-lb]` link. Links in the same
+// `[data-lb-group]` are browsed together. Captions come from data-title,
+// data-meta and data-href (project link). Without JS the links open the image.
+import type { Lang } from '../i18n/ui';
+import { t } from '../i18n/ui';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = t(lang).lightbox;
 ---
 
-<dialog class="lightbox" aria-label="Image viewer">
-  <figure><img alt="" /></figure>
-  <button class="lb-close" type="button" aria-label="Close">&times;</button>
-  <button class="lb-prev" type="button" aria-label="Previous image">&#8249;</button>
-  <button class="lb-next" type="button" aria-label="Next image">&#8250;</button>
-</dialog>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label={ui.label} data-open={ui.open}>
+  <div class="lb-top">
+    <span id="lbCount"></span><button class="btn" type="button" id="lbClose">{ui.close}</button>
+  </div>
+  <figure class="lb-fig"><img id="lbImg" alt="" /></figure>
+  <div class="lb-bot">
+    <div class="lb-cap" id="lbCap"></div>
+    <div class="lb-nav">
+      <button class="btn" type="button" id="lbPrev">{ui.prev}</button><button class="btn" type="button" id="lbNext"
+        >{ui.next}</button
+      >
+    </div>
+  </div>
+</div>
 
 <script>
-  const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-lightbox]')];
+  const lb = document.getElementById('lb')!;
+  const img = document.getElementById('lbImg') as HTMLImageElement;
+  const cap = document.getElementById('lbCap')!;
+  const count = document.getElementById('lbCount')!;
+  const prev = document.getElementById('lbPrev')!;
+  const next = document.getElementById('lbNext')!;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let list: HTMLAnchorElement[] = [];
+  let index = 0;
+  let from: HTMLElement | null = null;
 
-  if (dialog && links.length) {
-    const img = dialog.querySelector('img')!;
-    let index = 0;
+  const el = (tag: string, text: string) => Object.assign(document.createElement(tag), { textContent: text });
 
-    const show = (i: number) => {
-      index = (i + links.length) % links.length;
-      const link = links[index];
-      img.src = link.href;
-      img.alt = link.querySelector('img')?.alt ?? '';
-      // Preload neighbours so arrows feel instant.
-      for (const j of [index + 1, index - 1]) new Image().src = links[(j + links.length) % links.length].href;
-    };
-
-    links.forEach((link, i) =>
-      link.addEventListener('click', (e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-        e.preventDefault();
-        show(i);
-        dialog.showModal();
-      }),
-    );
-
-    const multiple = links.length > 1;
-    dialog.querySelectorAll<HTMLElement>('.lb-prev, .lb-next').forEach((b) => (b.hidden = !multiple));
-    dialog.querySelector('.lb-close')!.addEventListener('click', () => dialog.close());
-    dialog.querySelector('.lb-prev')!.addEventListener('click', () => show(index - 1));
-    dialog.querySelector('.lb-next')!.addEventListener('click', () => show(index + 1));
-    dialog.querySelector('figure')!.addEventListener('click', (e) => e.target !== img && dialog.close());
-    dialog.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') show(index - 1);
-      if (e.key === 'ArrowRight') show(index + 1);
-    });
-
-    let touchX = 0;
-    dialog.addEventListener('touchstart', (e) => (touchX = e.touches[0].clientX), { passive: true });
-    dialog.addEventListener('touchend', (e) => {
-      const dx = e.changedTouches[0].clientX - touchX;
-      if (multiple && Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
-    });
+  function render() {
+    const a = list[index];
+    img.style.animation = 'none';
+    void img.offsetWidth;
+    img.style.animation = '';
+    img.src = a.href;
+    img.alt = a.querySelector('img')?.alt ?? '';
+    cap.replaceChildren();
+    if (a.dataset.title) cap.append(el('b', a.dataset.title));
+    if (a.dataset.meta) cap.append(el('span', a.dataset.meta));
+    if (a.dataset.href) {
+      const link = el('a', lb.dataset.open!) as HTMLAnchorElement;
+      link.href = a.dataset.href;
+      cap.append(link);
+    }
+    count.textContent = `${String(index + 1).padStart(2, '0')} / ${String(list.length).padStart(2, '0')}`;
+    prev.hidden = next.hidden = list.length < 2;
+    for (const j of [index + 1, index - 1]) new Image().src = list[(j + list.length) % list.length].href;
   }
+  const step = (d: number) => {
+    index = (index + d + list.length) % list.length;
+    render();
+  };
+  function open(a: HTMLAnchorElement) {
+    const group = a.closest('[data-lb-group]') ?? document;
+    list = [...group.querySelectorAll<HTMLAnchorElement>('a[data-lb]')].filter((x) => x.offsetParent !== null);
+    index = Math.max(0, list.indexOf(a));
+    from = document.activeElement as HTMLElement;
+    lb.hidden = false;
+    document.body.style.overflow = 'hidden';
+    render();
+    void lb.offsetWidth;
+    lb.classList.add('on');
+    document.getElementById('lbClose')!.focus();
+  }
+  function close() {
+    lb.classList.remove('on');
+    document.body.style.overflow = '';
+    setTimeout(() => (lb.hidden = true), reduce ? 0 : 300);
+    from?.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest<HTMLAnchorElement>('a[data-lb]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    open(a);
+  });
+  document.getElementById('lbClose')!.addEventListener('click', close);
+  prev.addEventListener('click', () => step(-1));
+  next.addEventListener('click', () => step(1));
+  lb.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    if (target === lb || target.classList.contains('lb-fig')) close();
+  });
+  addEventListener('keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft' && list.length > 1) step(-1);
+    else if (e.key === 'ArrowRight' && list.length > 1) step(1);
+  });
+  let touchX = 0;
+  lb.addEventListener('touchstart', (e) => (touchX = e.touches[0].clientX), { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (list.length > 1 && Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  });
 </script>
