@@ -11,6 +11,14 @@ pt:
   title: "Quantos espaços interiores guardamos?"
   category: "Ilustração"
   medium: "colagem, aguarela"
+es:
+  title: "¿Cuántos espacios interiores guardamos?"
+  category: "Ilustración"
+  medium: "collage, acuarela"
+it:
+  title: "Quanti spazi interiori custodiamo?"
+  category: "Illustrazione"
+  medium: "collage, acquerello"
 blocks:
   - type: grid
     images:

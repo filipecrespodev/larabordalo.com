@@ -1,14 +1,18 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import Project from '../../views/Project.astro';
+import { LANGS, type Lang } from '../../i18n/ui';
 import { getProjects } from '../../lib/projects';
 
 export const getStaticPaths = (async () => {
   const projects = await getProjects();
-  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+  return LANGS.filter((l) => l !== 'en').flatMap((lang) =>
+    projects.map((project) => ({ params: { lang, slug: project.id }, props: { project } })),
+  );
 }) satisfies GetStaticPaths;
 
+const lang = Astro.params.lang as Lang;
 const { project } = Astro.props;
 ---
 
-<Project lang="pt" project={project} />
+<Project lang={lang} project={project} />

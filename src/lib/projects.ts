@@ -12,7 +12,7 @@ export async function getProjects() {
 /** Text fields of a project in the given language (falls back to English). */
 export function localize(project: Project, lang: Lang) {
   const { data } = project;
-  const o = lang === 'pt' ? data.pt : {};
+  const o = lang === 'en' ? {} : data[lang];
   return {
     title: o.title ?? data.title,
     description: o.description ?? data.description,

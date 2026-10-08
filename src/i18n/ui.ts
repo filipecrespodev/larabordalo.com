@@ -1,4 +1,4 @@
-export const LANGS = ['en', 'pt'] as const;
+export const LANGS = ['en', 'pt', 'es', 'it'] as const;
 export type Lang = (typeof LANGS)[number];
 
 const en = {
@@ -119,16 +119,145 @@ const pt: typeof en = {
   notFound: { title: 'Perdido', text: 'Esta página não existe.', back: 'Voltar ao início →' },
 };
 
-export const UI = { en, pt };
+const es: typeof en = {
+  role: 'Ilustradora y autora',
+  title: 'Lara Bordalo · Ilustradora y autora de libros infantiles',
+  description:
+    'Lara Bordalo es una ilustradora y autora de libros infantiles brasileña, afincada en Portugal, que trabaja con técnica mixta: recorte, pintura y digital.',
+  nav: { home: 'Inicio', books: 'Libros', illustration: 'Ilustración', about: 'Sobre mí' },
+  langName: 'Español',
+  home: {
+    tl: 'Ilustradora y autora',
+    tr: 'Portafolio 2026',
+    bl: 'Arrastra las imágenes · haz clic para ampliar',
+    br: 'Portugal',
+    hint: 'Toca una imagen para ampliarla',
+    dymo: 'Recorte · Pintura · Historia',
+    palette: 'Paleta · 2026',
+    colors: ['Coral', 'Ocre', 'Rosa', 'Azul noche'],
+  },
+  books: {
+    meta: 'Libros ilustrados y obra publicada',
+    titles: (n: number) => `${n} títulos`,
+    author: 'Texto',
+    publisher: 'Editorial',
+    medium: 'Técnica',
+    format: 'Edición',
+    view: 'Ver el libro',
+    illustrated: 'Ilustraciones de Lara Bordalo',
+  },
+  illustration: {
+    meta: 'Narrativas e ilustraciones sueltas',
+    note: 'Tamaños relativos entre las obras',
+    all: 'Todas',
+    works: (n: number) => `${n} ${n === 1 ? 'obra' : 'obras'}`,
+    filter: 'Filtrar por categoría',
+  },
+  about: {
+    meta: 'Sobre mí',
+    disciplines: 'Libros ilustrados · Ilustración · Técnica mixta',
+    portrait: 'Lara en el estudio',
+    contactLabel: 'Contacto · libros, encargos y hola',
+    hello: 'Si quieres trabajar conmigo, tienes alguna pregunta o simplemente quieres saludar, estaré encantada de hablar contigo.',
+    copy: 'Copiar e-mail',
+    copied: 'Copiado',
+    selected: 'Seleccionado',
+    form: {
+      name: 'Nombre',
+      email: 'Email *',
+      message: 'Mensaje *',
+      send: 'Enviar mensaje',
+      sent: '¡Gracias! Te responderé pronto :)',
+      error: (email: string) => `No se pudo enviar el mensaje. Escríbeme a ${email}.`,
+    },
+  },
+  project: { next: 'Siguiente', back: 'Todo el trabajo' },
+  lightbox: { label: 'Obra ampliada', close: 'Cerrar · Esc', prev: '← Anterior', next: 'Siguiente →', open: 'Abrir proyecto →' },
+  cursor: { drag: 'Arrastra', view: 'Ver', open: 'Abrir' },
+  foot: { rights: 'Todos los derechos reservados', top: 'Volver arriba ↑' },
+  notFound: { title: 'Perdido', text: 'Esta página no existe.', back: 'Volver al inicio →' },
+};
+
+const it: typeof en = {
+  role: 'Illustratrice e autrice',
+  title: 'Lara Bordalo · Illustratrice e autrice di albi illustrati',
+  description:
+    'Lara Bordalo è un’illustratrice e autrice di albi illustrati brasiliana che vive in Portogallo e lavora a tecnica mista: carta ritagliata, pittura e digitale.',
+  nav: { home: 'Home', books: 'Libri', illustration: 'Illustrazione', about: 'Chi sono' },
+  langName: 'Italiano',
+  home: {
+    tl: 'Illustratrice e autrice',
+    tr: 'Portfolio 2026',
+    bl: 'Trascina le immagini · clicca per ingrandire',
+    br: 'Portogallo',
+    hint: 'Tocca un’immagine per ingrandirla',
+    dymo: 'Ritaglio · Pittura · Storia',
+    palette: 'Palette · 2026',
+    colors: ['Corallo', 'Ocra', 'Rosa', 'Blu notte'],
+  },
+  books: {
+    meta: 'Albi illustrati e lavori pubblicati',
+    titles: (n: number) => `${n} titoli`,
+    author: 'Testo',
+    publisher: 'Editore',
+    medium: 'Tecnica',
+    format: 'Edizione',
+    view: 'Vedi il libro',
+    illustrated: 'Illustrazioni di Lara Bordalo',
+  },
+  illustration: {
+    meta: 'Narrazioni e illustrazioni singole',
+    note: 'Dimensioni relative tra le opere',
+    all: 'Tutte',
+    works: (n: number) => `${n} ${n === 1 ? 'opera' : 'opere'}`,
+    filter: 'Filtra per categoria',
+  },
+  about: {
+    meta: 'Chi sono',
+    disciplines: 'Albi illustrati · Illustrazione · Tecnica mista',
+    portrait: 'Lara nello studio',
+    contactLabel: 'Contatti · libri, commissioni e un saluto',
+    hello: 'Se vuoi lavorare con me, hai domande o vuoi semplicemente salutarmi, sarò felice di parlare con te.',
+    copy: 'Copia e-mail',
+    copied: 'Copiato',
+    selected: 'Selezionato',
+    form: {
+      name: 'Nome',
+      email: 'Email *',
+      message: 'Messaggio *',
+      send: 'Invia messaggio',
+      sent: 'Grazie! Ti risponderò presto :)',
+      error: (email: string) => `Non è stato possibile inviare il messaggio. Scrivimi a ${email}.`,
+    },
+  },
+  project: { next: 'Successivo', back: 'Tutti i lavori' },
+  lightbox: { label: 'Opera ingrandita', close: 'Chiudi · Esc', prev: '← Precedente', next: 'Successiva →', open: 'Apri il progetto →' },
+  cursor: { drag: 'Trascina', view: 'Vedi', open: 'Apri' },
+  foot: { rights: 'Tutti i diritti riservati', top: 'Torna su ↑' },
+  notFound: { title: 'Perso', text: 'Questa pagina non esiste.', back: 'Torna alla home →' },
+};
+
+export const UI = { en, pt, es, it };
 export const t = (lang: Lang) => UI[lang];
+
+/** Language codes for <html lang> and og:locale. */
+export const LOCALES: Record<Lang, { html: string; og: string }> = {
+  en: { html: 'en', og: 'en_US' },
+  pt: { html: 'pt', og: 'pt_PT' },
+  es: { html: 'es', og: 'es_ES' },
+  it: { html: 'it', og: 'it_IT' },
+};
 
 /** Prefix an internal path for the given language: ('/books', 'pt') -> '/pt/books'. */
 export const href = (path: string, lang: Lang) =>
-  lang === 'en' ? path : path === '/' ? '/pt' : `/pt${path}`;
+  lang === 'en' ? path : path === '/' ? `/${lang}` : `/${lang}${path}`;
 
 /** Language of a URL path, and the same path without the language prefix. */
 export function splitPath(pathname: string): { lang: Lang; path: string } {
   const clean = pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
-  if (clean === '/pt' || clean.startsWith('/pt/')) return { lang: 'pt', path: clean.slice(3) || '/' };
+  for (const lang of LANGS) {
+    if (lang !== 'en' && (clean === `/${lang}` || clean.startsWith(`/${lang}/`)))
+      return { lang, path: clean.slice(lang.length + 1) || '/' };
+  }
   return { lang: 'en', path: clean };
 }

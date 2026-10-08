@@ -13,6 +13,16 @@ pt:
   category: "Livro ilustrado"
   medium: "óleo, grafite e lápis de cor"
   description: "Um livro ilustrado que oferece reconhecimento e refúgio a crianças que vivem em ambientes familiares difíceis. Acompanha uma criança que aprende a camuflar-se diante de um pai cuja gentileza se torna perigosa."
+es:
+  title: "Camaleón"
+  category: "Libro ilustrado"
+  medium: "óleo, grafito y lápices de colores"
+  description: "Un libro ilustrado que ofrece reconocimiento y refugio a niños que viven en entornos familiares difíciles. Sigue a un niño que aprende a camuflarse frente a un padre cuya dulzura se vuelve peligrosa."
+it:
+  title: "Camaleonte"
+  category: "Albo illustrato"
+  medium: "olio, grafite e matite colorate"
+  description: "Un albo illustrato che offre riconoscimento e rifugio ai bambini che vivono in contesti familiari difficili. Segue un bambino che impara a mimetizzarsi davanti a un padre la cui dolcezza diventa pericolosa."
 blocks:
   - type: image
     src: ./01.jpg

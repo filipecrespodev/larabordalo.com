@@ -13,6 +13,16 @@ pt:
   category: "Narrativa"
   medium: "acrílica e lápis de cor"
   description: "Criei esta narrativa original para expressar, e aliviar, os conflitos e dilemas que vivi depois de mudar de país. Mostra uma parte da natureza humana com humor e ironia."
+es:
+  title: "El matador de bichos"
+  category: "Narrativa"
+  medium: "acrílico y lápices de colores"
+  description: "Creé esta narrativa original para expresar, y aliviar, los conflictos y dilemas que viví después de mudarme a otro país. Muestra una parte de la naturaleza humana con humor e ironía."
+it:
+  title: "L’ammazza-insetti"
+  category: "Narrativa"
+  medium: "acrilico e matite colorate"
+  description: "Ho creato questa narrazione originale per esprimere, e alleggerire, i conflitti e i dilemmi vissuti dopo essermi trasferita in un altro paese. Mostra una parte della natura umana con umorismo e ironia."
 blocks:
   - type: image
     src: ./01.jpg

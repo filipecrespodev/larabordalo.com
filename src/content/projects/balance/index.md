@@ -13,6 +13,16 @@ pt:
   category: "Ilustração"
   medium: "colagem, tinta-da-china, lápis de cor"
   description: "Às vezes precisamos de o encontrar."
+es:
+  title: "Equilibrio"
+  category: "Ilustración"
+  medium: "collage, tinta china, lápices de colores"
+  description: "A veces necesitamos encontrarlo."
+it:
+  title: "Equilibrio"
+  category: "Illustrazione"
+  medium: "collage, inchiostro di china, matite colorate"
+  description: "A volte abbiamo bisogno di trovarlo."
 blocks:
   - type: image
     src: ./01.jpg

@@ -16,8 +16,8 @@ const blocks = (image: SchemaContext['image']) =>
     ]),
   );
 
-/** Portuguese overrides; anything missing falls back to the English field. */
-const pt = z
+/** Translated fields; anything missing falls back to the English field. */
+const translation = z
   .object({
     title: z.string().optional(),
     description: z.string().optional(),
@@ -51,7 +51,9 @@ const projects = defineCollection({
       /** Relative size on the /illustration wall. */
       size: z.enum(['s', 'm', 'l']).default('m'),
       draft: z.boolean().default(false),
-      pt,
+      pt: translation,
+      es: translation,
+      it: translation,
       blocks: blocks(image),
     }),
 });
@@ -70,6 +72,8 @@ const pages = defineCollection({
       portrait: image(),
       en: bio,
       pt: bio,
+      es: bio,
+      it: bio,
     }),
 });
 

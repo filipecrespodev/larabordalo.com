@@ -1294,6 +1294,11 @@ html.wiping .wipe {
     width: 100%;
     justify-content: space-between;
   }
+  .lang {
+    position: absolute;
+    right: 0;
+    top: 10px;
+  }
   .nav {
     flex-wrap: wrap;
     gap: 4px 14px;

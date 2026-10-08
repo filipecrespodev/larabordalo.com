@@ -20,7 +20,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => !/\/(work|contact)$/.test(page),
-      i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt' } },
+      i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt', es: 'es', it: 'it' } },
     }),
   ],
 });

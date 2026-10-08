@@ -21,7 +21,7 @@ pnpm preview
 | `/about` | Bio, facts and contact (`src/content/pages/about/index.md`) |
 | `/<project>` | One page per project folder (old Adobe URLs still work) |
 
-Every page also exists in Portuguese under `/pt/…`. Interface texts are in `src/i18n/ui.ts`.
+Every page also exists in Portuguese (`/pt/…`), Spanish (`/es/…`) and Italian (`/it/…`). Interface texts are in `src/i18n/ui.ts`.
 
 ## Content
 
@@ -51,7 +51,7 @@ publisher: "Perabook (Brazil)"
 format: "Books of the World collection"
 size: "m"                    # s | m | l: relative size on the /illustration wall
 draft: false                 # true = hidden in production
-pt:                          # Portuguese version; missing fields fall back to English
+pt:                          # Portuguese; `es:` and `it:` work the same. Missing fields fall back to English
   title: "Camaleão"
   description: "…"
   category: "Livro ilustrado"
@@ -73,7 +73,7 @@ On `/books`, the two first images of a book (after the cover) are shown as sprea
 
 To add a project: create a folder in `src/content/projects/` (the folder name is the URL, e.g. `/my-new-book`), add the images and an `index.md`, then commit and push. Cloudflare publishes it automatically. Upload large originals: Astro makes the responsive WebP versions at build time, so 2000–2600px wide images are ideal. To show it on the home page too, add an entry to `src/data/moodboard.ts`.
 
-The About page (EN and PT text, facts list, portrait) lives in `src/content/pages/about/index.md`. E-mail and social links are in `src/consts.ts`.
+The About page (text and facts list in each language, portrait) lives in `src/content/pages/about/index.md`. E-mail and social links are in `src/consts.ts`.
 
 ### Re-importing from Adobe Portfolio
 

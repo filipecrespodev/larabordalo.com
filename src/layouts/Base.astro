@@ -8,7 +8,7 @@ import '../styles/global.css';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { SITE, SOCIAL } from '../consts';
-import { href, splitPath, t, type Lang } from '../i18n/ui';
+import { LANGS, LOCALES, href, splitPath, t, type Lang } from '../i18n/ui';
 import Lightbox from '../components/Lightbox.astro';
 
 interface Props {
@@ -26,7 +26,7 @@ const ui = t(lang);
 const pageTitle = title ? `${title} · ${SITE.name}` : ui.title;
 const { path } = splitPath(Astro.url.pathname);
 const canonical = new URL(href(path, lang), Astro.site);
-const alternates = (['en', 'pt'] as const).map((l) => ({ lang: l, url: new URL(href(path, l), Astro.site) }));
+const alternates = LANGS.map((l) => ({ lang: l, url: new URL(href(path, l), Astro.site) }));
 const ogImage = image ? await getImage({ src: image, width: 1200, format: 'jpg' }) : undefined;
 const nav = (['home', 'books', 'illustration', 'about'] as const).map((key) => ({
   key,
@@ -37,7 +37,7 @@ const year = new Date().getFullYear();
 ---
 
 <!doctype html>
-<html lang={lang === 'pt' ? 'pt' : 'en'}>
+<html lang={LOCALES[lang].html}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -54,7 +54,7 @@ const year = new Date().getFullYear();
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description ?? ui.description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content={lang === 'pt' ? 'pt_PT' : 'en_US'} />
+    <meta property="og:locale" content={LOCALES[lang].og} />
     {ogImage && <meta property="og:image" content={new URL(ogImage.src, Astro.site)} />}
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>

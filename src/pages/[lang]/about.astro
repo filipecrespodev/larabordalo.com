@@ -1,0 +1,10 @@
+---
+import About from '../../views/About.astro';
+import { LANGS, type Lang } from '../../i18n/ui';
+
+export const getStaticPaths = () => LANGS.filter((l) => l !== 'en').map((lang) => ({ params: { lang } }));
+
+const lang = Astro.params.lang as Lang;
+---
+
+<About lang={lang} />

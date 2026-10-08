@@ -15,6 +15,16 @@ pt:
   category: "Livro ilustrado"
   medium: "técnica mista"
   description: "Nesta história sensível e delicada, uma menina sente um elefante no coração, e depois vários, que a sufocam como medos e ansiedades. Com o apoio da irmã, aprende a reconhecer e a expressar as suas emoções, aliviando o peso desses sentimentos."
+es:
+  title: "Hay un elefante sentado en mi corazón"
+  category: "Libro ilustrado"
+  medium: "técnica mixta"
+  description: "En esta historia sensible y delicada, una niña siente un elefante en el corazón, y luego varios, que la ahogan como miedos y ansiedades. Con el apoyo de su hermana, aprende a reconocer y expresar sus emociones, aliviando el peso de esos sentimientos."
+it:
+  title: "C’è un elefante seduto sul mio cuore"
+  category: "Albo illustrato"
+  medium: "tecnica mista"
+  description: "In questa storia sensibile e delicata, una bambina sente un elefante nel cuore, e poi tanti, che la soffocano come paure e ansie. Con l’aiuto della sorella impara a riconoscere ed esprimere le sue emozioni, alleggerendo il peso di quei sentimenti."
 blocks:
   - type: grid
     width: 80
